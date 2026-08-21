@@ -1,0 +1,3120 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ระบบเว็บแอปสำหรับลางาน | Leave Management System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- นำเข้าฟอนต์ Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #f57c00;
+      --primary-dark: #e65100;
+      --primary-light: #ffe0b2;
+      --primary-hover: #ff9800;
+      --grey-dark: #263238;
+      --grey-medium: #455a64;
+      --grey-light: #eceff1;
+      --grey-bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-main: #37474f;
+      --text-muted: #78909c;
+      --success: #2e7d32;
+      --success-light: #e8f5e9;
+      --warning: #ef6c00;
+      --warning-light: #fff3e0;
+      --danger: #c62828;
+      --danger-light: #ffebee;
+      --info: #0277bd;
+      --info-light: #e1f5fe;
+      
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Sarabun', 'Mitr', sans-serif;
+      background-color: var(--grey-bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Mitr', sans-serif;
+      font-weight: 500;
+      color: var(--grey-dark);
+    }
+
+    /* โครงสร้างเลย์เอาต์ */
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    /* แถบหัวเว็บด้านบน (Header) */
+    .app-header {
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--grey-light);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-family: 'Mitr', sans-serif;
+      font-size: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand-text h1 {
+      font-size: 16px;
+      margin: 0;
+      color: var(--primary-dark);
+    }
+
+    .brand-text p {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: var(--grey-light);
+      padding: 6px 12px;
+      border-radius: 50px;
+      font-size: 13px;
+    }
+
+    .user-profile-badge .dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--success);
+      border-radius: 50%;
+    }
+
+    /* พื้นที่แสดงเนื้อหาหลัก */
+    .main-wrapper {
+      display: flex;
+      flex: 1;
+      position: relative;
+    }
+
+    /* แถบเมนูด้านข้าง (Sidebar) สำหรับคอมพิวเตอร์ */
+    .sidebar {
+      width: 250px;
+      background-color: var(--card-bg);
+      border-right: 1px solid var(--grey-light);
+      padding: 20px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .sidebar-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border: none;
+      background: none;
+      border-radius: var(--radius-md);
+      font-family: 'Sarabun', sans-serif;
+      font-size: 15px;
+      color: var(--grey-medium);
+      text-align: left;
+      cursor: pointer;
+      transition: var(--transition);
+      width: 100%;
+    }
+
+    .sidebar-btn:hover {
+      background-color: var(--grey-light);
+      color: var(--primary-dark);
+    }
+
+    .sidebar-btn.active {
+      background-color: var(--primary-light);
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    .sidebar-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    /* พื้นที่เนื้อหาภายในเพจ */
+    .content-area {
+      flex: 1;
+      padding: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding-bottom: 90px; /* เพื่อหลีกเลี่ยงการโดน Bottom Navigation ทับบนมือถือ */
+    }
+
+    /* แถบเมนูด้านล่าง (Bottom Nav) สำหรับมือถือ */
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: var(--card-bg);
+      border-top: 1px solid var(--grey-light);
+      justify-content: space-around;
+      padding: 8px 0;
+      z-index: 100;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+
+    .bottom-nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: none;
+      border: none;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 11px;
+      color: var(--text-muted);
+      cursor: pointer;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .bottom-nav-btn.active {
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    .bottom-nav-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    /* สกรีนแสดงสถานะโหลด (Loading) */
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      background-color: var(--grey-bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      gap: 20px;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid var(--grey-light);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s infinite linear;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    /* สกรีนแจ้งความผิดพลาดหรือไม่ได้รับอนุญาต */
+    .error-screen {
+      text-align: center;
+      padding: 40px 20px;
+      max-width: 500px;
+      margin: 100px auto;
+      background-color: var(--card-bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--grey-light);
+    }
+
+    .error-icon {
+      font-size: 50px;
+      margin-bottom: 20px;
+    }
+
+    /* องค์ประกอบ UI พื้นฐาน */
+    .card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 20px;
+      border: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .card-title {
+      font-size: 18px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 2px solid var(--grey-light);
+      padding-bottom: 8px;
+    }
+
+    .card-title svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--primary);
+    }
+
+    /* ปุ่ม */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: var(--radius-md);
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      transition: var(--transition);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background-color: var(--grey-light);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background-color: #cfd8dc;
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #b71c1c;
+    }
+
+    .btn-success {
+      background-color: var(--success);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background-color: #1b5e20;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .btn-full {
+      width: 100%;
+    }
+
+    /* แดชบอร์ดโควตาลา (Leave Summary Cards) */
+    .leave-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .quota-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-left: 6px solid var(--primary);
+    }
+
+    .quota-card.sick { border-left-color: #26a69a; }
+    .quota-card.personal { border-left-color: #ff9800; }
+    .quota-card.vacation { border-left-color: #29b6f6; }
+
+    .quota-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .quota-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--grey-medium);
+    }
+
+    .quota-badge {
+      background-color: var(--grey-light);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .quota-numbers {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .quota-remain {
+      font-size: 36px;
+      font-family: 'Mitr', sans-serif;
+      font-weight: 600;
+      color: var(--grey-dark);
+    }
+
+    .quota-total {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .quota-footer {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 10px;
+      border-top: 1px solid var(--grey-light);
+      padding-top: 8px;
+    }
+
+    /* ฟอร์มการรับข้อมูล */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-row > * {
+      flex: 1;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--grey-medium);
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="date"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cfd8dc;
+      border-radius: var(--radius-md);
+      font-family: 'Sarabun', sans-serif;
+      font-size: 14px;
+      color: var(--text-main);
+      background-color: white;
+      transition: var(--transition);
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    /* อัปโหลดไฟล์แบบกำหนดเอง */
+    .file-upload-wrapper {
+      position: relative;
+      border: 2px dashed #cfd8dc;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      background-color: #fafafa;
+      transition: var(--transition);
+    }
+
+    .file-upload-wrapper:hover {
+      border-color: var(--primary);
+      background-color: var(--primary-light);
+    }
+
+    .file-upload-input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .file-upload-text {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Password / National ID Toggle Wrapper */
+    .password-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .password-input-wrapper input {
+      width: 100%;
+      padding-right: 42px !important;
+    }
+
+    .password-toggle-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px 8px;
+      color: #607d8b;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      user-select: none;
+    }
+
+    .password-toggle-btn:hover {
+      color: var(--primary);
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    /* ตาราง / ประวัติการขอลา */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--grey-light);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: var(--grey-light);
+      padding: 12px 16px;
+      font-weight: 600;
+      color: var(--grey-dark);
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--grey-light);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* แท็กสถานะอนุมัติ */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .badge-pending {
+      background-color: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .badge-approved {
+      background-color: var(--success-light);
+      color: var(--success);
+    }
+
+    .badge-rejected {
+      background-color: var(--danger-light);
+      color: var(--danger);
+    }
+
+    /* หน้าต่างป็อปอัป Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-lg);
+      max-width: 500px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      animation: modalSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes modalSlide {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-header {
+      background-color: var(--primary-dark);
+      color: white;
+      padding: 16px 20px;
+      font-family: 'Mitr', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .modal-footer {
+      padding: 12px 20px;
+      background-color: var(--grey-light);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .close-modal {
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+    }
+
+    /* แดชบอร์ดผู้อนุมัติ (Approver Cards) */
+    .approval-card {
+      border: 1px solid var(--grey-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 16px;
+      background-color: var(--card-bg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .approval-card-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed var(--grey-light);
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+
+    .applicant-info h4 {
+      font-size: 15px;
+      color: var(--grey-dark);
+    }
+
+    .applicant-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .approval-card-body {
+      font-size: 13.5px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .approval-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* ปฏิทินแสดงภาพรวมการลา */
+    .calendar-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .calendar-event {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background-color: var(--grey-bg);
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 13.5px;
+    }
+
+    .calendar-event.sick { border-left-color: #26a69a; }
+    .calendar-event.personal { border-left-color: #ff9800; }
+    .calendar-event.vacation { border-left-color: #29b6f6; }
+
+    .event-date {
+      font-weight: bold;
+      color: var(--grey-medium);
+      min-width: 90px;
+    }
+
+    .event-details {
+      flex: 1;
+    }
+
+    .event-details strong {
+      color: var(--grey-dark);
+    }
+
+    /* หน้าการจัดการของ HR */
+    .admin-tab-section {
+      display: flex;
+      border-bottom: 1px solid var(--grey-light);
+      margin-bottom: 20px;
+      gap: 15px;
+      overflow-x: auto;
+    }
+
+    .admin-sub-tab {
+      padding: 8px 16px;
+      border: none;
+      background: none;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--text-muted);
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+    }
+
+    .admin-sub-tab.active {
+      color: var(--primary-dark);
+      border-bottom-color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    /* แจ้งเตือนสั้นๆ (Toasts) */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: var(--grey-dark);
+      color: white;
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      z-index: 9999;
+      font-size: 14px;
+      display: none;
+      animation: toastSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes toastSlide {
+      from { transform: translateY(-30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* สไตล์เพิ่มเติมสำหรับระบบเข้าสู่ระบบ/ลงทะเบียน (Authentication) */
+    .auth-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: var(--grey-bg);
+      padding: 20px;
+    }
+
+    .auth-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 420px;
+      overflow: hidden;
+      border: 1px solid var(--grey-light);
+      animation: modalSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .auth-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      padding: 30px 20px;
+      text-align: center;
+      color: white;
+    }
+
+    .auth-logo {
+      width: 50px;
+      height: 50px;
+      background: white;
+      color: var(--primary-dark);
+      font-weight: bold;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 12px;
+      font-family: 'Mitr', sans-serif;
+      box-shadow: var(--shadow-md);
+    }
+
+    .auth-header h2 {
+      font-size: 20px;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .auth-header p {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .auth-card form {
+      padding: 24px;
+    }
+
+    .auth-footer {
+      padding: 16px 24px;
+      background-color: #fafafa;
+      border-top: 1px solid var(--grey-light);
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .auth-footer a {
+      color: var(--primary-dark);
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .auth-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* หน้าประวัติการลาบนมือถือ */
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none; /* ซ่อนแถบด้านข้างบนมือถือ */
+      }
+      
+      .bottom-nav {
+        display: flex; /* แสดงแถบด้านล่างบนมือถือ */
+      }
+      
+      .content-area {
+        padding: 16px;
+      }
+      
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+      
+      .table-container table, 
+      .table-container thead, 
+      .table-container tbody, 
+      .table-container th, 
+      .table-container td, 
+      .table-container tr {
+        display: block;
+      }
+      
+      .table-container thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+      
+      .table-container tr {
+        border: 1px solid var(--grey-light);
+        margin-bottom: 10px;
+        border-radius: var(--radius-md);
+        background-color: var(--card-bg);
+        padding: 10px;
+      }
+      
+      .table-container td {
+        border: none;
+        border-bottom: 1px dashed var(--grey-light);
+        position: relative;
+        padding-left: 45%;
+        text-align: right;
+        min-height: 40px;
+      }
+      
+    /* สไตล์ปุ่มส่งออกรายงานแบบสรุป */
+    .btn-export-excel {
+      background-color: transparent;
+      color: #2e7d32;
+      border: 1.5px solid #2e7d32;
+      padding: 10px 20px;
+      border-radius: var(--radius-md);
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+    .btn-export-excel:hover {
+      background-color: #2e7d32;
+      color: white;
+      transform: translateY(-1px);
+    }
+    .btn-print-pdf {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius-md);
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+    .btn-print-pdf:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    /* ตารางย่อยหัวข้อประเภทการลา */
+    .summary-table th {
+      text-align: center;
+      vertical-align: middle;
+      font-size: 13px;
+    }
+    .summary-table td {
+      vertical-align: middle;
+      font-size: 13.5px;
+    }
+    
+    /* สไตล์สำหรับการพิมพ์รายงาน PDF */
+    @media print {
+      body {
+        background-color: white !important;
+        color: black !important;
+      }
+      /* ซ่อนองค์ประกอบอื่นๆ ทั้งหมด ยกเว้นการ์ดสรุป */
+      #appLayout, .sidebar, .header, .bottom-nav, #toastNotification, .card-title, #summaryFilterCard, .btn, button, input, select {
+        display: none !important;
+      }
+      .app-main {
+        padding: 0 !important;
+        margin: 0 !important;
+        background: none !important;
+      }
+      #adminSubTab_fiscal {
+        display: block !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      #fiscalSummaryCard {
+        display: block !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+      }
+      #fiscalSummaryCard .card-title {
+        display: block !important;
+        border-bottom: 2px solid #333 !important;
+        font-size: 18px !important;
+        color: #000 !important;
+        margin-bottom: 10px !important;
+        padding-bottom: 5px !important;
+        text-align: center !important;
+      }
+      #fiscalSummaryCard .card-title svg {
+        display: none !important;
+      }
+      #summarySubtitle {
+        display: block !important;
+        text-align: center !important;
+        font-size: 12px !important;
+        margin-bottom: 20px !important;
+        color: #000 !important;
+      }
+      .table-container {
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+      }
+      .summary-table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+      }
+      .summary-table th, .summary-table td {
+        border: 1px solid #000 !important;
+        color: #000 !important;
+        padding: 6px 4px !important;
+        font-size: 11px !important;
+        text-align: center !important;
+      }
+      .summary-table td:nth-child(2), .summary-table td:nth-child(3) {
+        text-align: left !important;
+      }
+      .summary-table th {
+        background-color: #f2f2f2 !important;
+        font-weight: bold !important;
+      }
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <!-- จอภาพการโหลดข้อมูลอัตโนมัติ -->
+  <div id="loadingScreen" class="loading-screen" style="display: none;">
+    <div class="spinner"></div>
+    <div style="font-family: 'Mitr', sans-serif; font-size: 16px; color: var(--grey-medium);">กำลังเชื่อมต่อกับระบบ...</div>
+  </div>
+
+  <!-- จอภาพข้อผิดพลาดกรณีไม่มีสิทธิ์ใช้งาน -->
+  <div id="errorScreen" class="error-screen" style="display: none;">
+    <div class="error-icon">🔒</div>
+    <h3 style="margin-bottom: 10px;">พบข้อผิดพลาด</h3>
+    <p id="errorMessage" style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;"></p>
+    <button class="btn btn-primary btn-sm" onclick="window.location.reload()">โหลดใหม่อีกครั้ง</button>
+  </div>
+
+  <!-- ================= หน้าจอเข้าสู่ระบบและลงทะเบียน (AUTH CONTAINER) ================= -->
+  <div id="authContainer" class="auth-wrapper" style="display: none;">
+    
+    <!-- หน้าเข้าสู่ระบบ (Login Card) -->
+    <div id="loginCard" class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo">L</div>
+        <h2>ระบบลางานออนไลน์</h2>
+        <p>วิทยาลัยเทคนิคประจวบคีรีขันธ์</p>
+      </div>
+      <form id="loginForm" onsubmit="submitLogin(event)">
+        <div class="form-group">
+          <label for="loginUsername">Username (ชื่อผู้ใช้)</label>
+          <input type="text" id="loginUsername" placeholder="กรอก Username (ชื่อผู้ใช้)" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password (รหัสผ่าน)</label>
+          <div class="password-input-wrapper">
+            <input type="password" id="loginPassword" placeholder="กรอก Password (รหัสผ่าน)..." required>
+            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('loginPassword', this)" title="แสดงข้อมูล">👁️</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top: 10px;">🔑 เข้าสู่ระบบ</button>
+      </form>
+      <div class="auth-footer">
+        ยังไม่มีบัญชีใช้งาน? <a href="#" onclick="showAuthView('register')">ลงทะเบียนบุคลากรใหม่ที่นี่</a>
+      </div>
+    </div>
+
+    <!-- หน้าลงทะเบียน (Register Card) -->
+    <div id="registerCard" class="auth-card" style="display: none; max-width: 550px;">
+      <div class="auth-header" style="background: linear-gradient(135deg, var(--grey-medium), var(--grey-dark));">
+        <div class="auth-logo" style="background: white; color: var(--grey-dark);">R</div>
+        <h2>ลงทะเบียนบุคลากรใหม่</h2>
+        <p>เพื่อขอเข้าใช้งานระบบลางานและเปิดรับสิทธิ์วันลา</p>
+      </div>
+      <form id="registerForm" onsubmit="submitRegister(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="regUsername">Username (ชื่อผู้ใช้เข้าสู่ระบบ) <span style="color: var(--danger);">*</span></label>
+            <input type="text" id="regUsername" placeholder="ตั้ง Username สำหรับเข้าสู่ระบบ" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="regPassword">Password (รหัสผ่าน) <span style="color: var(--danger);">*</span></label>
+            <div class="password-input-wrapper">
+              <input type="password" id="regPassword" placeholder="ตั้งรหัสผ่าน..." required>
+              <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('regPassword', this)" title="แสดงข้อมูล">👁️</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="regPasswordConfirm">ยืนยัน Password <span style="color: var(--danger);">*</span></label>
+            <div class="password-input-wrapper">
+              <input type="password" id="regPasswordConfirm" placeholder="ยืนยันรหัสผ่านอีกครั้ง..." required>
+              <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('regPasswordConfirm', this)" title="แสดงข้อมูล">👁️</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" style="flex: 0 0 130px;">
+            <label for="regPrefix">คำนำหน้าชื่อ <span style="color: var(--danger);">*</span></label>
+            <select id="regPrefix" required>
+              <option value="นาย">นาย</option>
+              <option value="นาง">นาง</option>
+              <option value="นางสาว">นางสาว</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="regFirstName">ชื่อจริง <span style="color: var(--danger);">*</span></label>
+            <input type="text" id="regFirstName" placeholder="กรอกชื่อจริง" required>
+          </div>
+          <div class="form-group">
+            <label for="regLastName">นามสกุล <span style="color: var(--danger);">*</span></label>
+            <input type="text" id="regLastName" placeholder="กรอกนามสกุล" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="regId">รหัสประจำตัวบุคลากร</label>
+            <input type="text" id="regId" placeholder="รหัสประจำตัวบุคลากร (ไม่บังคับ)">
+          </div>
+          <div class="form-group">
+            <label for="regType">ประเภทบุคลากร <span style="color: var(--danger);">*</span></label>
+            <select id="regType" required>
+              <option value="ข้าราชการ">ข้าราชการ</option>
+              <option value="ลูกจ้างชั่วคราว">ลูกจ้างชั่วคราว</option>
+              <option value="บุคลากรทางการศึกษาตามมาตรา38(ค)2">บุคลากรทางการศึกษาตามมาตรา38(ค)2</option>
+              <option value="ครูผู้ช่วย">ครูผู้ช่วย</option>
+              <option value="ครูชำนาญการพิเศษ">ครูชำนาญการพิเศษ</option>
+              <option value="ครูชำนาญการ">ครูชำนาญการ</option>
+              <option value="ครู">ครู</option>
+              <option value="ครูพิเศษสอน">ครูพิเศษสอน</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="regDepartment">แผนกวิชา/ฝ่าย/งาน <span style="color: var(--danger);">*</span></label>
+            <select id="regDepartment" required>
+              <option value="" disabled selected>-- เลือกแผนก/ฝ่าย/งาน --</option>
+              <optgroup label="สำนักงานผู้บริหาร / ฝ่ายบริหาร">
+                <option value="สำนักงานผู้อำนวยการ">สำนักงานผู้อำนวยการ</option>
+                <option value="ฝ่ายบริหารทรัพยากร">ฝ่ายบริหารทรัพยากร</option>
+                <option value="ฝ่ายพัฒนากิจการนักเรียนนักศึกษา">ฝ่ายพัฒนากิจการนักเรียนนักศึกษา</option>
+                <option value="ฝ่ายวิชาการ">ฝ่ายวิชาการ</option>
+              </optgroup>
+              <optgroup label="แผนกวิชา">
+                <option value="ช่างยนต์">ช่างยนต์</option>
+                <option value="ช่างยานยนต์ไฟฟ้า">ช่างยานยนต์ไฟฟ้า</option>
+                <option value="ช่างไฟฟ้ากำลัง">ช่างไฟฟ้ากำลัง</option>
+                <option value="ช่างกลโรงงาน">ช่างกลโรงงาน</option>
+                <option value="ช่างเชื่อมโลหะ">ช่างเชื่อมโลหะ</option>
+                <option value="ช่างก่อสร้าง">ช่างก่อสร้าง</option>
+                <option value="อิเล็กทรอนิกส์">อิเล็กทรอนิกส์</option>
+                <option value="ช่างเมคคาทรอนิกส์">ช่างเมคคาทรอนิกส์</option>
+                <option value="สถาปัตยกรรม">สถาปัตยกรรม</option>
+                <option value="การโรงแรม">การโรงแรม</option>
+                <option value="การบัญชี">การบัญชี</option>
+                <option value="การตลาด">การตลาด</option>
+                <option value="เทคโนโลยีธุรกิจดิจิทัล">เทคโนโลยีธุรกิจดิจิทัล</option>
+                <option value="สามัญสัมพันธ์">สามัญสัมพันธ์</option>
+                <option value="คณะเทคโนโลยีบัณฑิต">คณะเทคโนโลยีบัณฑิต</option>
+              </optgroup>
+              <optgroup label="ฝ่ายบริหารทรัพยากร">
+                <option value="งานบริหารงานทั่วไป">งานบริหารงานทั่วไป</option>
+                <option value="งานบริหารและพัฒนาทรัพยากรบุคคล">งานบริหารและพัฒนาทรัพยากรบุคคล</option>
+                <option value="งานการเงิน">งานการเงิน</option>
+                <option value="งานบัญชี">งานบัญชี</option>
+                <option value="งานทะเบียน">งานทะเบียน</option>
+                <option value="งานพัสดุ">งานพัสดุ</option>
+                <option value="งานอาคารสถานที่">งานอาคารสถานที่</option>
+              </optgroup>
+              <optgroup label="ฝ่ายวิชาการ">
+                <option value="งานพัฒนาหลักสูตรและการจัดการเรียนรู้">งานพัฒนาหลักสูตรและการจัดการเรียนรู้</option>
+                <option value="งานวัดผลและประเมินผล">งานวัดผลและประเมินผล</option>
+                <option value="งานอาชีวศึกษาระบบทวิภาคีและความร่วมมือ">งานอาชีวศึกษาระบบทวิภาคีและความร่วมมือ</option>
+                <option value="งานวิทยบริการและเทคโนโลยีการศึกษา">งานวิทยบริการและเทคโนโลยีการศึกษา</option>
+                <option value="งานการศึกษาพิเศษและความเสมอภาคทางการศึกษา">งานการศึกษาพิเศษและความเสมอภาคทางการศึกษา</option>
+                <option value="งานพัฒนาหลักสูตรสายเทคโนโลยีหรือสายปฏิบัติการ">งานพัฒนาหลักสูตรสายเทคโนโลยีหรือสายปฏิบัติการ</option>
+              </optgroup>
+              <optgroup label="ฝ่ายยุทธศาสตร์และแผนงาน">
+                <option value="งานพัฒนายุทธศาสตร์ แผนงานและงบประมาณ">งานพัฒนายุทธศาสตร์ แผนงานและงบประมาณ</option>
+                <option value="งานมาตรฐานและการประกันคุณภาพการศึกษา">งานมาตรฐานและการประกันคุณภาพการศึกษา</option>
+                <option value="งานศูนย์ดิจิทัลและสื่อสารองค์กร">งานศูนย์ดิจิทัลและสื่อสารองค์กร</option>
+                <option value="งานส่งเสริมการวิจัย นวัตกรรม และสิ่งประดิษฐ์">งานส่งเสริมการวิจัย นวัตกรรม และสิ่งประดิษฐ์</option>
+                <option value="งานส่งเสริมธุรกิจและการเป็นผู้ประกอบการ">งานส่งเสริมธุรกิจและการเป็นผู้ประกอบการ</option>
+                <option value="งานติดตามและประเมินผลการอาชีวศึกษา">งานติดตามและประเมินผลการอาชีวศึกษา</option>
+              </optgroup>
+              <optgroup label="ฝ่ายกิจการนักเรียน นักศึกษา">
+                <option value="งานกิจกรรมนักเรียน นักศึกษา">งานกิจกรรมนักเรียน นักศึกษา</option>
+                <option value="งานครูที่ปรึกษาและการแนะแนว">งานครูที่ปรึกษาและการแนะแนว</option>
+                <option value="งานปกครองและความปลอดภัยนักเรียน นักศึกษา">งานปกครองและความปลอดภัยนักเรียน นักศึกษา</option>
+                <option value="งานสวัสดิการนักเรียน นักศึกษา">งานสวัสดิการนักเรียน นักศึกษา</option>
+                <option value="งานโครงการพิเศษและการบริการ">งานโครงการพิเศษและการบริการ</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="regPosition">ตำแหน่งงาน <span style="color: var(--danger);">*</span></label>
+            <select id="regPosition" required>
+              <option value="ครูประจำแผนก">ครูประจำแผนก</option>
+              <option value="เจ้าหน้าที่งาน">เจ้าหน้าที่งาน</option>
+              <option value="ช่างไม้">ช่างไม้</option>
+              <option value="พนักงานขับรถยนต์">พนักงานขับรถยนต์</option>
+              <option value="หัวหน้าแผนก">หัวหน้าแผนก</option>
+              <option value="หัวหน้างาน">หัวหน้างาน</option>
+              <option value="รองผู้อำนวยการ">รองผู้อำนวยการ</option>
+              <option value="ผู้อำนวยการ">ผู้อำนวยการ</option>
+            </select>
+          </div>
+        </div>
+
+
+
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top: 10px;">📝 ลงทะเบียนใช้งาน</button>
+      </form>
+      <div class="auth-footer">
+        มีบัญชีใช้งานระบบอยู่แล้ว? <a href="#" onclick="showAuthView('login')">เข้าสู่ระบบที่นี่</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= เลย์เอาต์หน้าหลักของตัวระบบแอปพลิเคชัน ================= -->
+  <div class="app-container" id="appLayout" style="display: none;">
+    <!-- แถบหัวเว็บด้านบน (Header) -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-logo">L</div>
+        <div class="brand-text">
+          <h1>ระบบลางานวิทยาลัย</h1>
+          <p>วิทยาลัยเทคนิคประจวบคีรีขันธ์</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="user-profile-badge">
+          <div class="dot"></div>
+          <span id="headerUserName">ผู้ใช้งานระบบ</span>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="handleLogout()" style="padding: 6px 10px; font-weight: bold; display: flex; align-items: center; gap: 4px;">
+          🚪 ออกจากระบบ
+        </button>
+      </div>
+    </header>
+
+    <div class="main-wrapper">
+      <!-- เมนูนำทางด้านข้าง (Sidebar) สำหรับคอมพิวเตอร์ -->
+      <aside class="sidebar">
+        <button id="sideUserTab" class="sidebar-btn active" onclick="switchTab('user')">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          การลางานของฉัน
+        </button>
+
+        <button id="sideAdminTab" class="sidebar-btn" onclick="switchTab('admin')" style="display: none;">
+          <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+          แผงผู้ดูแลระบบ (HR)
+        </button>
+      </aside>
+
+      <!-- แถบเมนูด้านล่าง (Bottom Nav) สำหรับโทรศัพท์มือถือ -->
+      <nav class="bottom-nav">
+        <button id="bottomUserTab" class="bottom-nav-btn active" onclick="switchTab('user')">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          ลาของฉัน
+        </button>
+
+        <button id="bottomAdminTab" class="bottom-nav-btn" onclick="switchTab('admin')" style="display: none;">
+          <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+          จัดการ (HR)
+        </button>
+      </nav>
+
+      <!-- พื้นที่แสดงเนื้อหาเนื้อในเพจ -->
+      <main class="content-area">
+        
+        <!-- ================= 1. VIEW: แดชบอร์ดบุคลากร (USER DASHBOARD) ================= -->
+        <div id="viewUser" class="tab-content">
+          <!-- สรุปสิทธิ์วันลาคงเหลือ (ซ่อนออกเนื่องจากไม่มีโควต้าตายตัว) -->
+          <div class="leave-summary-grid" id="leaveSummaryGrid" style="display: none;">
+            <div class="quota-card sick">
+              <div class="quota-header">
+                <span class="quota-name">ลาป่วย</span>
+                <span class="quota-badge">ประจำปี</span>
+              </div>
+              <div class="quota-numbers"><span class="quota-remain" id="remSick">0</span> <span class="quota-total">/ <span id="totSick">0</span> วัน</span></div>
+              <div class="quota-footer">ใช้ไปแล้ว: <span id="usdSick">0</span> วัน (<span id="cntSick">0</span> ครั้ง)</div>
+            </div>
+            <div class="quota-card personal">
+              <div class="quota-header">
+                <span class="quota-name">ลากิจส่วนตัว</span>
+                <span class="quota-badge">ประจำปี</span>
+              </div>
+              <div class="quota-numbers"><span class="quota-remain" id="remPersonal">0</span> <span class="quota-total">/ <span id="totPersonal">0</span> วัน</span></div>
+              <div class="quota-footer">ใช้ไปแล้ว: <span id="usdPersonal">0</span> วัน (<span id="cntPersonal">0</span> ครั้ง)</div>
+            </div>
+            <div class="quota-card vacation">
+              <div class="quota-header">
+                <span class="quota-name">ลาพักผ่อน</span>
+                <span class="quota-badge">ประจำปี</span>
+              </div>
+              <div class="quota-numbers"><span class="quota-remain" id="remVacation">0</span> <span class="quota-total">/ <span id="totVacation">0</span> วัน</span></div>
+              <div class="quota-footer">ใช้ไปแล้ว: <span id="usdVacation">0</span> วัน (<span id="cntVacation">0</span> ครั้ง)</div>
+            </div>
+          </div>
+
+          <!-- ฟอร์มขออนุมัติลางานออนไลน์ -->
+          <div class="card">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+              แบบฟอร์มขออนุมัติลาออนไลน์
+            </div>
+            <form id="leaveRequestForm" onsubmit="handleLeaveSubmit(event)">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="leaveType">ประเภทการลา <span style="color: var(--danger);">*</span></label>
+                  <select id="leaveType" required>
+                    <option value="" disabled selected>-- เลือกประเภทการลา --</option>
+                    <option value="ลาป่วย">ลาป่วย</option>
+                    <option value="ลากิจส่วนตัว">ลากิจส่วนตัว</option>
+                    <option value="ลาคลอดบุตร">ลาคลอดบุตร</option>
+                    <option value="ช่วยภริยาคลอด">ช่วยภริยาคลอด</option>
+                    <option value="อุปสมบท/ฮัจญ์">อุปสมบท/ฮัจญ์</option>
+                    <option value="ศึกษา/อบรม">ศึกษา/อบรม</option>
+                    <option value="อื่นๆ">อื่นๆ</option>
+                  </select>
+                </div>
+                <div class="form-group" style="display: none;">
+                  <label for="leavePeriod">ช่วงเวลาการลา <span style="color: var(--danger);">*</span></label>
+                  <select id="leavePeriod" onchange="calculateLeaveDays()" required>
+                    <option value="full">เต็มวัน</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="startDate">วันที่เริ่มต้น <span style="color: var(--danger);">*</span></label>
+                  <input type="date" id="startDate" onchange="calculateLeaveDays()" required>
+                </div>
+                <div class="form-group">
+                  <label for="endDate">วันที่สิ้นสุด <span style="color: var(--danger);">*</span></label>
+                  <input type="date" id="endDate" onchange="calculateLeaveDays()" required>
+                </div>
+                <div class="form-group" style="flex: 0 0 130px;">
+                  <label for="totalDays">จำนวนวันลา <span style="color: var(--danger);">*</span></label>
+                  <input type="number" id="totalDays" min="0.5" step="0.5" required placeholder="ระบุจำนวนวัน...">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="leaveReason">เหตุผลการลา <span style="color: var(--danger);">*</span></label>
+                <textarea id="leaveReason" placeholder="โปรดระบุรายละเอียด/เหตุผล..." required></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="contactAddress">สถานที่ติดต่อระหว่างลา / เบอร์โทรศัพท์ติดต่อ <span style="color: var(--danger);">*</span></label>
+                <input type="text" id="contactAddress" placeholder="เช่น 123 ม.4 ต.ประจวบ หรือเบอร์โทร 08X-XXXXXXX" required>
+              </div>
+
+              <div class="form-group">
+                <label>อัปโหลดเอกสารแนบ (เช่น ใบรับรองแพทย์ หรือหนังสือเชิญประชุม)</label>
+                <div class="file-upload-wrapper">
+                  <input type="file" id="fileAttachment" class="file-upload-input" onchange="handleFileSelect(this)">
+                  <div class="file-upload-text" id="fileUploadText">
+                    📁 ลากไฟล์มาวางที่นี่ หรือ คลิกเพื่อเลือกไฟล์<br>
+                    <span style="font-size: 11px; color: var(--text-muted);">(รองรับ PDF, PNG, JPG ขนาดไม่เกิน 10MB)</span>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-full">
+                📤 ส่งคำขออนุมัติลา
+              </button>
+            </form>
+          </div>
+
+
+
+          <!-- ตารางประวัติการลา -->
+          <div class="card">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+              ประวัติการลาและสถานะ
+              <span id="totalLeaveCountBadge" class="badge badge-info" style="margin-left: auto; font-size: 13px;">ลาไปแล้วทั้งหมด 0 ครั้ง</span>
+            </div>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>รหัสใบลา</th>
+                    <th>วันที่ยื่นคำขอ</th>
+                    <th>ประเภทการลา</th>
+                    <th>ช่วงวันที่ลา</th>
+                    <th>จำนวนวัน</th>
+                    <th>สถานะ</th>
+                    <th>เอกสารแนบ</th>
+                    <th>ความเห็นหัวหน้างาน</th>
+                  </tr>
+                </thead>
+                <tbody id="userLeaveHistoryTable">
+                  <!-- โหลดข้อมูลผ่าน JS -->
+                  <tr>
+                    <td colspan="8" style="text-align: center; color: var(--text-muted);">กำลังโหลดข้อมูลประวัติการลา...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+
+
+        <!-- ================= 3. VIEW: แดชบอร์ดแอดมิน (ADMIN DASHBOARD) ================= -->
+        <div id="viewAdmin" class="tab-content" style="display: none;">
+          <!-- แท็บย่อยฝั่งแอดมิน -->
+          <div class="admin-tab-section">
+            <button class="admin-sub-tab active" onclick="switchAdminSubTab('employees')">จัดการบุคลากร</button>
+            <button class="admin-sub-tab" onclick="switchAdminSubTab('fiscal')">จัดการปีงบประมาณ</button>
+            <button class="admin-sub-tab" onclick="switchAdminSubTab('reports')">รายงานการลาทั้งหมด</button>
+          </div>
+
+          <!-- แอดมิน: จัดการบุคลากร (Employees Tab) -->
+          <div id="adminSubTab_employees" class="admin-sub-content">
+            <div class="card">
+              <div class="card-title">➕ เพิ่ม/แก้ไขข้อมูลบุคลากร</div>
+              <form id="employeeForm" onsubmit="handleEmployeeSubmit(event)">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="empEmail">Username (ชื่อผู้ใช้) <span style="color: var(--danger);">*</span></label>
+                    <input type="text" id="empEmail" placeholder="กรอก Username เข้าสู่ระบบ" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="empId">รหัสประจำตัวบุคลากร</label>
+                    <input type="text" id="empId" placeholder="รหัสประจำตัวบุคลากร (ไม่บังคับ)">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group" style="flex: 0 0 150px;">
+                    <label for="empPrefix">คำนำหน้า <span style="color: var(--danger);">*</span></label>
+                    <select id="empPrefix" required>
+                      <option value="นาย">นาย</option>
+                      <option value="นาง">นาง</option>
+                      <option value="นางสาว">นางสาว</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="empFirstName">ชื่อจริง <span style="color: var(--danger);">*</span></label>
+                    <input type="text" id="empFirstName" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="empLastName">นามสกุล <span style="color: var(--danger);">*</span></label>
+                    <input type="text" id="empLastName" required>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="empDepartment">แผนกวิชา/ฝ่าย/งาน <span style="color: var(--danger);">*</span></label>
+                    <select id="empDepartment" required>
+                      <option value="" disabled selected>-- เลือกแผนก/ฝ่าย/งาน --</option>
+                      <optgroup label="สำนักงานผู้บริหาร / ฝ่ายบริหาร">
+                        <option value="สำนักงานผู้อำนวยการ">สำนักงานผู้อำนวยการ</option>
+                        <option value="ฝ่ายบริหารทรัพยากร">ฝ่ายบริหารทรัพยากร</option>
+                        <option value="ฝ่ายพัฒนากิจการนักเรียนนักศึกษา">ฝ่ายพัฒนากิจการนักเรียนนักศึกษา</option>
+                        <option value="ฝ่ายวิชาการ">ฝ่ายวิชาการ</option>
+                      </optgroup>
+                      <optgroup label="แผนกวิชา">
+                        <option value="ช่างยนต์">ช่างยนต์</option>
+                        <option value="ช่างยานยนต์ไฟฟ้า">ช่างยานยนต์ไฟฟ้า</option>
+                        <option value="ช่างไฟฟ้ากำลัง">ช่างไฟฟ้ากำลัง</option>
+                        <option value="ช่างกลโรงงาน">ช่างกลโรงงาน</option>
+                        <option value="ช่างเชื่อมโลหะ">ช่างเชื่อมโลหะ</option>
+                        <option value="ช่างก่อสร้าง">ช่างก่อสร้าง</option>
+                        <option value="อิเล็กทรอนิกส์">อิเล็กทรอนิกส์</option>
+                        <option value="ช่างเมคคาทรอนิกส์">ช่างเมคคาทรอนิกส์</option>
+                        <option value="สถาปัตยกรรม">สถาปัตยกรรม</option>
+                        <option value="การโรงแรม">การโรงแรม</option>
+                        <option value="การบัญชี">การบัญชี</option>
+                        <option value="การตลาด">การตลาด</option>
+                        <option value="เทคโนโลยีธุรกิจดิจิทัล">เทคโนโลยีธุรกิจดิจิทัล</option>
+                        <option value="สามัญสัมพันธ์">สามัญสัมพันธ์</option>
+                        <option value="คณะเทคโนโลยีบัณฑิต">คณะเทคโนโลยีบัณฑิต</option>
+                      </optgroup>
+                      <optgroup label="ฝ่ายบริหารทรัพยากร">
+                        <option value="งานบริหารงานทั่วไป">งานบริหารงานทั่วไป</option>
+                        <option value="งานบริหารและพัฒนาทรัพยากรบุคคล">งานบริหารและพัฒนาทรัพยากรบุคคล</option>
+                        <option value="งานการเงิน">งานการเงิน</option>
+                        <option value="งานบัญชี">งานบัญชี</option>
+                        <option value="งานทะเบียน">งานทะเบียน</option>
+                        <option value="งานพัสดุ">งานพัสดุ</option>
+                        <option value="งานอาคารสถานที่">งานอาคารสถานที่</option>
+                      </optgroup>
+                      <optgroup label="ฝ่ายวิชาการ">
+                        <option value="งานพัฒนาหลักสูตรและการจัดการเรียนรู้">งานพัฒนาหลักสูตรและการจัดการเรียนรู้</option>
+                        <option value="งานวัดผลและประเมินผล">งานวัดผลและประเมินผล</option>
+                        <option value="งานอาชีวศึกษาระบบทวิภาคีและความร่วมมือ">งานอาชีวศึกษาระบบทวิภาคีและความร่วมมือ</option>
+                        <option value="งานวิทยบริการและเทคโนโลยีการศึกษา">งานวิทยบริการและเทคโนโลยีการศึกษา</option>
+                        <option value="งานการศึกษาพิเศษและความเสมอภาคทางการศึกษา">งานการศึกษาพิเศษและความเสมอภาคทางการศึกษา</option>
+                        <option value="งานพัฒนาหลักสูตรสายเทคโนโลยีหรือสายปฏิบัติการ">งานพัฒนาหลักสูตรสายเทคโนโลยีหรือสายปฏิบัติการ</option>
+                      </optgroup>
+                      <optgroup label="ฝ่ายยุทธศาสตร์และแผนงาน">
+                        <option value="งานพัฒนายุทธศาสตร์ แผนงานและงบประมาณ">งานพัฒนายุทธศาสตร์ แผนงานและงบประมาณ</option>
+                        <option value="งานมาตรฐานและการประกันคุณภาพการศึกษา">งานมาตรฐานและการประกันคุณภาพการศึกษา</option>
+                        <option value="งานศูนย์ดิจิทัลและสื่อสารองค์กร">งานศูนย์ดิจิทัลและสื่อสารองค์กร</option>
+                        <option value="งานส่งเสริมการวิจัย นวัตกรรม และสิ่งประดิษฐ์">งานส่งเสริมการวิจัย นวัตกรรม และสิ่งประดิษฐ์</option>
+                        <option value="งานส่งเสริมธุรกิจและการเป็นผู้ประกอบการ">งานส่งเสริมธุรกิจและการเป็นผู้ประกอบการ</option>
+                        <option value="งานติดตามและประเมินผลการอาชีวศึกษา">งานติดตามและประเมินผลการอาชีวศึกษา</option>
+                      </optgroup>
+                      <optgroup label="ฝ่ายกิจการนักเรียน นักศึกษา">
+                        <option value="งานกิจกรรมนักเรียน นักศึกษา">งานกิจกรรมนักเรียน นักศึกษา</option>
+                        <option value="งานครูที่ปรึกษาและการแนะแนว">งานครูที่ปรึกษาและการแนะแนว</option>
+                        <option value="งานปกครองและความปลอดภัยนักเรียน นักศึกษา">งานปกครองและความปลอดภัยนักเรียน นักศึกษา</option>
+                        <option value="งานสวัสดิการนักเรียน นักศึกษา">งานสวัสดิการนักเรียน นักศึกษา</option>
+                        <option value="งานโครงการพิเศษและการบริการ">งานโครงการพิเศษและการบริการ</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="empPosition">ตำแหน่งงาน <span style="color: var(--danger);">*</span></label>
+                    <select id="empPosition" required>
+                      <option value="ครูประจำแผนก">ครูประจำแผนก</option>
+                      <option value="เจ้าหน้าที่งาน">เจ้าหน้าที่งาน</option>
+                      <option value="ช่างไม้">ช่างไม้</option>
+                      <option value="พนักงานขับรถยนต์">พนักงานขับรถยนต์</option>
+                      <option value="หัวหน้าแผนก">หัวหน้าแผนก</option>
+                      <option value="หัวหน้างาน">หัวหน้างาน</option>
+                      <option value="รองผู้อำนวยการ">รองผู้อำนวยการ</option>
+                      <option value="ผู้อำนวยการ">ผู้อำนวยการ</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="empType">ประเภทบุคลากร <span style="color: var(--danger);">*</span></label>
+                    <select id="empType" required>
+                      <option value="ข้าราชการ">ข้าราชการ</option>
+                      <option value="ลูกจ้างชั่วคราว">ลูกจ้างชั่วคราว</option>
+                      <option value="บุคลากรทางการศึกษาตามมาตรา38(ค)2">บุคลากรทางการศึกษาตามมาตรา38(ค)2</option>
+                      <option value="ครูผู้ช่วย">ครูผู้ช่วย</option>
+                      <option value="ครูชำนาญการพิเศษ">ครูชำนาญการพิเศษ</option>
+                      <option value="ครูชำนาญการ">ครูชำนาญการ</option>
+                      <option value="ครู">ครู</option>
+                      <option value="ครูพิเศษสอน">ครูพิเศษสอน</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="empLineId">LINE User ID (สำหรับรับแจ้งเตือนใบลา)</label>
+                    <input type="text" id="empLineId" placeholder="เช่น U123456789abcdef...">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="empPassword">กำหนดรหัสผ่าน (เว้นว่างไว้เพื่อรักษารหัสผ่านเดิม)</label>
+                    <div class="password-input-wrapper">
+                      <input type="password" id="empPassword" placeholder="เว้นว่างหรือพิมพ์รหัสผ่านใหม่...">
+                      <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('empPassword', this)" title="แสดงข้อมูล">👁️</button>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-success">💾 บันทึกข้อมูลบุคลากร</button>
+                <button type="button" class="btn btn-secondary" onclick="resetEmployeeForm()">เคลียร์ฟอร์ม</button>
+              </form>
+            </div>
+
+            <div class="card">
+              <div class="card-title" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>รายชื่อบุคลากรทั้งหมดในระบบ</span>
+                <button class="btn btn-secondary btn-sm" onclick="loadAdminData()" style="padding: 4px 8px; font-size: 12px; display: flex; align-items: center; gap: 4px; border-radius: 6px;">
+                  🔄 รีเฟรชข้อมูล
+                </button>
+              </div>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>รหัสพนักงาน</th>
+                      <th>ชื่อ - นามสกุล</th>
+                      <th>Username</th>
+                      <th>แผนกวิชา</th>
+                      <th>ตำแหน่ง</th>
+                      <th>ประเภท</th>
+                      <th>LINE User ID</th>
+                      <th>การจัดการ</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminEmployeesTable">
+                    <tr>
+                      <td colspan="8" style="text-align: center; color: var(--text-muted);">กำลังโหลดรายชื่อพนักงาน...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+
+
+          <!-- แอดมิน: จัดการปีงบประมาณ (Fiscal Year Tab) -->
+          <div id="adminSubTab_fiscal" class="admin-sub-content" style="display: none;">
+            <!-- การ์ดตัวกรองสรุปรายงาน (Filter) -->
+            <div class="card" id="summaryFilterCard">
+              <div class="form-row" style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; flex: 1;">
+                  <div class="form-group" style="min-width: 150px; margin-bottom: 0;">
+                    <label for="summaryFiscalYear" style="font-weight: 600; display: flex; align-items: center; gap: 6px; margin-bottom: 8px; color: var(--grey-medium);">
+                      📅 ปีงบประมาณ
+                    </label>
+                    <select id="summaryFiscalYear" onchange="renderFiscalYearSummaryTable()" style="width: 100%; border: 1.5px solid var(--grey-light); padding: 8px 12px; border-radius: var(--radius-sm); outline: none; background: white; font-family: inherit;">
+                      <!-- Options dynamically added -->
+                    </select>
+                  </div>
+                  <div class="form-group" style="min-width: 250px; margin-bottom: 0;">
+                    <label for="summaryRound" style="font-weight: 600; display: flex; align-items: center; gap: 6px; margin-bottom: 8px; color: var(--grey-medium);">
+                      🔄 รอบการประเมิน
+                    </label>
+                    <select id="summaryRound" onchange="renderFiscalYearSummaryTable()" style="width: 100%; border: 1.5px solid var(--grey-light); padding: 8px 12px; border-radius: var(--radius-sm); outline: none; background: white; font-family: inherit;">
+                      <option value="1">รอบที่ 1 (1 ต.ค. - 31 มี.ค.)</option>
+                      <option value="2" selected>รอบที่ 2 (1 เม.ย. - 30 ก.ย.)</option>
+                    </select>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                  <button type="button" class="btn-export-excel" onclick="exportSummaryToExcel()">
+                    📊 โหลด Excel
+                  </button>
+                  <button type="button" class="btn-print-pdf" onclick="window.print()">
+                    🖨️ พิมพ์ PDF
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- การ์ดสรุปวันลาของบุคลากร (Summary Table) -->
+            <div class="card" id="fiscalSummaryCard">
+              <div class="card-title" style="display: flex; flex-direction: column; align-items: center; text-align: center; border-bottom: none; margin-bottom: 5px;">
+                <span style="font-size: 18px; font-weight: bold; color: var(--primary-dark);">สรุปวันลาของข้าราชการ พนักงานราชการ และบุคลากรทางการศึกษา</span>
+                <span id="summarySubtitle" style="font-size: 13.5px; color: var(--text-muted); font-weight: normal; margin-top: 5px;">กำลังคำนวณข้อมูล...</span>
+              </div>
+              <div class="table-container" style="margin-top: 15px;">
+                <table class="summary-table">
+                  <thead>
+                    <tr>
+                      <th rowspan="2" style="width: 50px;">ที่</th>
+                      <th rowspan="2" style="min-width: 180px;">ชื่อ - สกุล</th>
+                      <th rowspan="2" style="min-width: 150px;">สังกัดแผนกวิชา</th>
+                      <th colspan="7" style="text-align: center; background-color: rgba(245, 124, 0, 0.05);">ประเภทการลา</th>
+                      <th rowspan="2" style="width: 70px; background-color: rgba(245, 124, 0, 0.1);">รวมวัน</th>
+                      <th rowspan="2" style="width: 70px;">รวมครั้ง</th>
+                    </tr>
+                    <tr>
+                      <th style="font-weight: 500;">ลาป่วย</th>
+                      <th style="font-weight: 500;">ลากิจส่วนตัว</th>
+                      <th style="font-weight: 500;">ลาคลอดบุตร</th>
+                      <th style="font-weight: 500;">ช่วยภริยาคลอด</th>
+                      <th style="font-weight: 500;">อุปสมบท/ฮัจญ์</th>
+                      <th style="font-weight: 500;">ศึกษา/อบรม</th>
+                      <th style="font-weight: 500;">อื่นๆ</th>
+                    </tr>
+                  </thead>
+                  <tbody id="summaryTableBody">
+                    <tr>
+                      <td colspan="12" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                        กำลังโหลดข้อมูลตารางสรุป...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- แอดมิน: รายงาน (Reports Tab) -->
+          <div id="adminSubTab_reports" class="admin-sub-content" style="display: none;">
+            <div class="card">
+              <div class="card-title">📊 ส่งออกรายงานข้อมูลการลางาน</div>
+              <div class="form-row">
+                <button class="btn btn-success" onclick="exportLeaveRequestsToCSV()">📥 ส่งออกประวัติการลาทั้งหมด (.CSV)</button>
+                <button class="btn btn-primary" onclick="exportLeaveBalancesToCSV()">📥 ส่งออกสรุปสิทธิ์คงเหลือของทุกคน (.CSV)</button>
+              </div>
+            </div>
+            
+            <div class="card">
+              <div class="card-title">ประวัติการขออนุมัติลาทั้งหมดในวิทยาลัย</div>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>รหัสใบลา</th>
+                      <th>อีเมลผู้ขอลา</th>
+                      <th>ประเภทการลา</th>
+                      <th>วันที่เริ่มต้น</th>
+                      <th>วันที่สิ้นสุด</th>
+                      <th>จำนวนวัน</th>
+                      <th>สถานะ</th>
+                      <th>หมายเหตุจากผู้บริหาร</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminAllRequestsTable">
+                    <tr>
+                      <td colspan="8" style="text-align: center; color: var(--text-muted);">กำลังโหลดรายการการลา...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- หน้าต่างการแสดงความคิดเห็นเมื่อปฏิเสธใบลา (Reject Modal) -->
+  <div class="modal" id="rejectModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        ระบุเหตุผลที่ปฏิเสธใบลา
+        <button class="close-modal" onclick="closeRejectModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="rejectRequestId">
+        <div class="form-group">
+          <label for="rejectComment">เหตุผลที่ไม่สามารถอนุมัติได้ <span style="color: var(--danger);">*</span></label>
+          <textarea id="rejectComment" placeholder="พิมพ์เหตุผลส่งกลับไปยังผู้ยื่นขอลา..." required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeRejectModal()">ยกเลิก</button>
+        <button class="btn btn-danger" onclick="submitReject()">ยืนยันปฏิเสธ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- หน้าต่าง Modal สำหรับตั้งค่านโยบายของแอดมิน -->
+  <div class="modal" id="policyModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        แก้ไขสิทธิ์วันลาพื้นฐาน
+        <button class="close-modal" onclick="closePolicyModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="policyEditForm" onsubmit="handlePolicySave(event)">
+          <input type="hidden" id="policyEmpType">
+          <div class="form-group">
+            <label id="policyLabelType" style="font-weight: bold; font-size: 15px; margin-bottom: 10px; color: var(--primary-dark);"></label>
+          </div>
+          <div class="form-group">
+            <label for="policySick">สิทธิ์ลาป่วยตั้งต้น (วัน)</label>
+            <input type="number" id="policySick" required>
+          </div>
+          <div class="form-group">
+            <label for="policyPersonal">สิทธิ์ลากิจตั้งต้น (วัน)</label>
+            <input type="number" id="policyPersonal" required>
+          </div>
+          <div class="form-group">
+            <label for="policyVacation">สิทธิ์ลาพักผ่อนตั้งต้น (วัน)</label>
+            <input type="number" id="policyVacation" required>
+          </div>
+          <button type="submit" style="display: none;" id="policySubmitBtn"></button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closePolicyModal()">ยกเลิก</button>
+        <button class="btn btn-primary" onclick="document.getElementById('policySubmitBtn').click()">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- กล่องแสดงแจ้งเตือนสั้นๆ (Toast) -->
+  <div id="toastNotification" class="toast"></div>
+
+  <script>
+    // สเตตเก็บข้อมูลของแอปพลิเคชัน
+    let appState = {
+      user: null,          // ข้อมูลบทบาทพนักงานที่ล็อกอินอยู่
+      dashboardData: null, // ยอดวันลาคงเหลือ ประวัติ
+      approverData: null,  // รายการรออนุมัติ ปฏิทิน
+      adminData: null,     // รายชื่อ สิทธิ์ ทั้งหมด
+      selectedFile: null   // ไฟล์แนบที่เลือก
+    };
+    
+    let adminRefreshInterval = null; // ตัวแปรสำหรับคุมการซิงก์ข้อมูลแอดมินแบบ Real-time
+    
+    // ฟังก์ชันสลับการแสดงผลรหัสผ่าน/เลขประจำตัวประชาชน (Eye Toggle)
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      if (input.type === "password") {
+        input.type = "text";
+        btn.innerHTML = "👁️‍🗨️";
+        btn.title = "ซ่อนข้อมูล";
+      } else {
+        input.type = "password";
+        btn.innerHTML = "👁️";
+        btn.title = "แสดงข้อมูล";
+      }
+    }
+    
+    // สถานะปฏิทินวันลา
+    const today = new Date();
+    let calendarState = {
+      currentYear: today.getFullYear(),
+      currentMonth: today.getMonth()
+    };
+    
+    const holidays2026Map = {
+      "2026-01-01": "วันขึ้นปีใหม่",
+      "2026-02-02": "วันมาฆบูชา",
+      "2026-04-06": "วันจักรี",
+      "2026-04-13": "วันสงกรานต์",
+      "2026-04-14": "วันสงกรานต์",
+      "2026-04-15": "วันสงกรานต์",
+      "2026-05-04": "วันฉัตรมงคล",
+      "2026-05-31": "วันวิสาขบูชา",
+      "2026-06-01": "ชดเชยวันวิสาขบูชา",
+      "2026-06-03": "วันเฉลิมฯ พระราชินี",
+      "2026-07-28": "วันเฉลิมฯ รัชกาลที่ 10",
+      "2026-07-29": "วันอาสาฬหบูชา",
+      "2026-07-30": "วันเข้าพรรษา",
+      "2026-08-12": "วันแม่แห่งชาติ",
+      "2026-10-13": "วันนวมินทรมหาราช",
+      "2026-10-23": "วันปิยมหาราช",
+      "2026-12-05": "วันชาติ/วันพ่อแห่งชาติ",
+      "2026-12-07": "ชดเชยวันพ่อแห่งชาติ",
+      "2026-12-10": "วันพระราชทานรัฐธรรมนูญ",
+      "2026-12-31": "วันสิ้นปี"
+    };
+
+    // เมื่อหน้าเว็บโหลดพร้อมทำงาน
+    document.addEventListener("DOMContentLoaded", function() {
+      checkLocalAuth();
+    });
+
+    // แสดงแจ้งเตือนสั้น (Toast)
+    function showToast(message, duration = 3000) {
+      const toast = document.getElementById("toastNotification");
+      toast.innerText = message;
+      toast.style.display = "block";
+      setTimeout(() => {
+        toast.style.display = "none";
+      }, duration);
+    }
+
+    // ตรวจสอบข้อมูลล็อกอินท้องถิ่นใน sessionStorage
+    function checkLocalAuth() {
+      const savedEmail = sessionStorage.getItem("userEmail");
+      if (savedEmail) {
+        document.getElementById("loadingScreen").style.display = "flex";
+        google.script.run
+          .withSuccessHandler(function(response) {
+            if (response.exists) {
+              loginUserSuccess(response);
+            } else {
+              // ลบเซสชันถ้าเซิร์ฟเวอร์หาไม่เจอ
+              sessionStorage.removeItem("userEmail");
+              showAuthView("login");
+            }
+          })
+          .withFailureHandler(function(err) {
+            sessionStorage.removeItem("userEmail");
+            showAuthView("login");
+          })
+          .getUserRole(savedEmail);
+      } else {
+        showAuthView("login");
+      }
+    }
+
+    // สลับหน้าจอ Login และ Register
+    function showAuthView(viewName) {
+      document.getElementById("loadingScreen").style.display = "none";
+      document.getElementById("appLayout").style.display = "none";
+      document.getElementById("authContainer").style.display = "flex";
+      
+      if (viewName === 'login') {
+        document.getElementById("loginCard").style.display = "block";
+        document.getElementById("registerCard").style.display = "none";
+      } else {
+        document.getElementById("loginCard").style.display = "none";
+        document.getElementById("registerCard").style.display = "block";
+      }
+    }
+
+    // จัดการเข้าสู่ระบบ (Login)
+    function submitLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById("loginUsername").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+      
+      if (!username || !password) {
+        alert("กรุณากรอก Username และ Password ให้ครบถ้วน");
+        return;
+      }
+      
+      const submitBtn = e.target.querySelector("button[type='submit']");
+      submitBtn.disabled = true;
+      submitBtn.innerText = "กำลังเข้าสู่ระบบ...";
+      
+      google.script.run
+        .withSuccessHandler(function(res) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = "🔑 เข้าสู่ระบบ";
+          
+          if (res.success) {
+            sessionStorage.setItem("userEmail", res.email);
+            loginUserSuccess(res);
+          } else {
+            alert(res.message || "Username หรือ Password ไม่ถูกต้อง");
+          }
+        })
+        .withFailureHandler(function(err) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = "🔑 เข้าสู่ระบบ";
+          alert("เกิดความผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์: " + err.toString());
+        })
+        .loginUser(username, password);
+    }
+
+    // จัดการลงทะเบียนบุคลากรใหม่ (Register)
+    function submitRegister(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById("regUsername").value.trim();
+      const password = document.getElementById("regPassword").value.trim();
+      const passwordConfirm = document.getElementById("regPasswordConfirm").value.trim();
+      
+      if (!username) {
+        alert("กรุณากรอก Username สำหรับเข้าสู่ระบบ");
+        return;
+      }
+      
+      if (!password) {
+        alert("กรุณากรอก Password (รหัสผ่าน)");
+        return;
+      }
+      
+      if (password !== passwordConfirm) {
+        alert("Password ที่กรอกไม่ตรงกัน กรุณาตรวจสอบอีกครั้ง");
+        return;
+      }
+      
+      const empData = {
+        username: username,
+        password: password,
+        prefix: document.getElementById("regPrefix").value,
+        first_name: document.getElementById("regFirstName").value.trim(),
+        last_name: document.getElementById("regLastName").value.trim(),
+        emp_id: document.getElementById("regId").value.trim(),
+        emp_type: document.getElementById("regType").value,
+        department: document.getElementById("regDepartment").value,
+        position: document.getElementById("regPosition").value
+      };
+      
+      const submitBtn = e.target.querySelector("button[type='submit']");
+      submitBtn.disabled = true;
+      submitBtn.innerText = "กำลังลงทะเบียน...";
+      
+      google.script.run
+        .withSuccessHandler(function(res) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = "📝 ลงทะเบียนใช้งาน";
+          
+          if (res.success) {
+            alert(res.message);
+            document.getElementById("registerForm").reset();
+            showAuthView("login");
+          } else {
+            alert(res.message || "เกิดข้อผิดพลาดในการลงทะเบียน");
+          }
+        })
+        .withFailureHandler(function(err) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = "📝 ลงทะเบียนใช้งาน";
+          alert("เกิดความผิดพลาด: " + err.toString());
+        })
+        .registerUser(empData);
+    }
+
+    // เมื่อเข้าสู่ระบบเสร็จสิ้นสำเร็จ
+    function loginUserSuccess(userObj) {
+      appState.user = userObj;
+      var roleText = userObj.isAdmin ? "แอดมิน/ผู้ดูแลระบบ" : (userObj.isApprover ? "ผู้อนุมัติ" : "บุคลากรทั่วไป");
+      document.getElementById("headerUserName").innerText = userObj.prefix + userObj.first_name + " " + userObj.last_name + " (" + roleText + ")";
+      
+
+      
+      if (userObj.isAdmin) {
+        document.getElementById("sideAdminTab").style.display = "flex";
+        document.getElementById("bottomAdminTab").style.display = "flex";
+      } else {
+        document.getElementById("sideAdminTab").style.display = "none";
+        document.getElementById("bottomAdminTab").style.display = "none";
+      }
+      
+      // สลับหน้าจอจาก Login ไปเป็นหน้าจอแอปหลัก
+      document.getElementById("authContainer").style.display = "none";
+      document.getElementById("loadingScreen").style.display = "none";
+      document.getElementById("appLayout").style.display = "flex";
+      
+      // แสดง Dashboard ลางาน (ถ้าเป็นแอดมิน ให้เปิดหน้าแอดมินโดยตรงเพื่ออำนวยความสะดวก)
+      if (userObj.isAdmin) {
+        switchTab('admin');
+      } else {
+        switchTab('user');
+      }
+    }
+
+    // ออกจากระบบ (Logout)
+    function handleLogout() {
+      if (confirm("คุณต้องการออกจากระบบลางานใช่หรือไม่?")) {
+        sessionStorage.clear();
+        appState.user = null;
+        document.getElementById("loginForm").reset();
+        showAuthView("login");
+      }
+    }
+
+    // เปลี่ยนหน้าหลัก (Tabs Switching)
+    function switchTab(tabName) {
+      document.querySelectorAll(".tab-content").forEach(el => el.style.display = "none");
+      document.querySelectorAll(".sidebar-btn, .bottom-nav-btn").forEach(el => el.classList.remove("active"));
+      
+      // เคลียร์อินเทอร์วัลออโต้รีเฟรชของเดิมเมื่อสลับแท็บ
+      if (adminRefreshInterval) {
+        clearInterval(adminRefreshInterval);
+        adminRefreshInterval = null;
+      }
+      
+      if (tabName === 'user') {
+        document.getElementById("viewUser").style.display = "block";
+        document.getElementById("sideUserTab").classList.add("active");
+        document.getElementById("bottomUserTab").classList.add("active");
+        loadUserDashboardData();
+
+      } else if (tabName === 'admin') {
+        document.getElementById("viewAdmin").style.display = "block";
+        document.getElementById("sideAdminTab").classList.add("active");
+        document.getElementById("bottomAdminTab").classList.add("active");
+        loadAdminData();
+        
+        // ตั้งอินเทอร์วัลรีเฟรชอัตโนมัติทุกๆ 30 วินาที
+        if (!adminRefreshInterval) {
+          adminRefreshInterval = setInterval(function() {
+            if (appState.user && appState.user.isAdmin) {
+              loadAdminData();
+            }
+          }, 30000);
+        }
+      }
+    }
+
+    // เปลี่ยนเพจย่อยแอดมิน (Admin Sub-Tabs Switching)
+    function switchAdminSubTab(subTabName) {
+      document.querySelectorAll(".admin-sub-content").forEach(el => el.style.display = "none");
+      document.querySelectorAll(".admin-sub-tab").forEach(el => el.classList.remove("active"));
+      
+      document.getElementById("adminSubTab_" + subTabName).style.display = "block";
+      event.target.classList.add("active");
+      
+      if (subTabName === 'fiscal') {
+        populateFiscalYearDropdown();
+        renderFiscalYearSummaryTable();
+      }
+    }
+
+    // -------------------------------------------------------------
+    // ฟังก์ชันของแท็บ: การลางานของฉัน (USER SECTION)
+    // -------------------------------------------------------------
+    
+    function loadUserDashboardData() {
+      document.getElementById("userLeaveHistoryTable").innerHTML = `
+        <tr><td colspan="8" style="text-align: center; color: var(--text-muted);">กำลังโหลดข้อมูลจาก Google Sheets...</td></tr>
+      `;
+      
+      google.script.run
+        .withSuccessHandler(function(data) {
+          if (!data) {
+            document.getElementById("userLeaveHistoryTable").innerHTML = `
+              <tr><td colspan="8" style="text-align: center; color: var(--danger);">ไม่พบข้อมูลผู้ใช้งานในระบบ</td></tr>
+            `;
+            return;
+          }
+          appState.dashboardData = data;
+          
+          // 1. อัปเดตสิทธิ์วันลาคงเหลือ (ถ้ามี element)
+          if (document.getElementById("totSick")) document.getElementById("totSick").innerText = data.balance.sick_total;
+          if (document.getElementById("usdSick")) document.getElementById("usdSick").innerText = data.balance.sick_used;
+          if (document.getElementById("remSick")) document.getElementById("remSick").innerText = data.balance.sick_remain;
+          
+          if (document.getElementById("totPersonal")) document.getElementById("totPersonal").innerText = data.balance.personal_total;
+          if (document.getElementById("usdPersonal")) document.getElementById("usdPersonal").innerText = data.balance.personal_used;
+          if (document.getElementById("remPersonal")) document.getElementById("remPersonal").innerText = data.balance.personal_remain;
+          
+          if (document.getElementById("totVacation")) document.getElementById("totVacation").innerText = data.balance.vacation_total;
+          if (document.getElementById("usdVacation")) document.getElementById("usdVacation").innerText = data.balance.vacation_used;
+          if (document.getElementById("remVacation")) document.getElementById("remVacation").innerText = data.balance.vacation_remain;
+          
+          // 2. คำนวณและอัปเดตสถิติจำนวนครั้งที่ลา
+          let countSick = 0;
+          let countPersonal = 0;
+          let countVacation = 0;
+          let totalCount = 0;
+          
+          if (data.history && data.history.length > 0) {
+            totalCount = data.history.length;
+            data.history.forEach(item => {
+              if (item.leave_type === 'ลาป่วย') countSick++;
+              else if (item.leave_type === 'ลากิจส่วนตัว') countPersonal++;
+              else if (item.leave_type === 'ลาพักผ่อน') countVacation++;
+            });
+          }
+          
+          document.getElementById("cntSick").innerText = countSick;
+          document.getElementById("cntPersonal").innerText = countPersonal;
+          document.getElementById("cntVacation").innerText = countVacation;
+          
+          const totalBadge = document.getElementById("totalLeaveCountBadge");
+          if (totalBadge) {
+            totalBadge.innerText = "ลาไปแล้วทั้งหมด " + totalCount + " ครั้ง";
+          }
+          
+          // 3. เติมที่อยู่ติดต่อให้เป็นค่าเริ่มต้น
+          if (!document.getElementById("contactAddress").value) {
+            const deptName = data.user.department || "";
+            const deptPrefix = (deptName.indexOf('แผนก') === 0 || deptName.indexOf('งาน') === 0 || deptName.indexOf('คณะ') === 0) ? "" : "แผนกวิชา";
+            document.getElementById("contactAddress").value = deptPrefix + deptName + " วิทยาลัยเทคนิคประจวบคีรีขันธ์";
+          }
+          
+          // 4. แสดงรายการประวัติ
+          renderUserHistory(data.history);
+        })
+        .withFailureHandler(function(err) {
+          document.getElementById("userLeaveHistoryTable").innerHTML = `
+            <tr><td colspan="8" style="text-align: center; color: var(--danger);">เกิดข้อผิดพลาดในการโหลดข้อมูล: ${err.message || err}</td></tr>
+          `;
+          alert("โหลดข้อมูลแดชบอร์ดล้มเหลว: " + err.toString());
+        })
+        .getDashboardData(appState.user.email);
+    }
+
+    // เรนเดอร์ตารางประวัติ
+    function renderUserHistory(historyList) {
+      const tbody = document.getElementById("userLeaveHistoryTable");
+      if (historyList.length === 0) {
+        tbody.innerHTML = `
+          <tr><td colspan="8" style="text-align: center; color: var(--text-muted);">คุณไม่มีประวัติการยื่นคำขอลา</td></tr>
+        `;
+        return;
+      }
+      
+      let html = "";
+      historyList.forEach(item => {
+        let badgeClass = "badge-pending";
+        let statusText = "🟡 รอพิจารณา";
+        if (item.status === 'Pending Dept') {
+          statusText = "🟡 รอหัวหน้าแผนก (ด่าน 1)";
+        } else if (item.status === 'Pending HR') {
+          statusText = "🟡 รอฝ่ายบุคลากร (ด่าน 2)";
+        } else if (item.status === 'Pending Deputy') {
+          statusText = "🟡 รอรองผู้อำนวยการ (ด่าน 3)";
+        } else if (item.status === 'Pending Director') {
+          statusText = "🟡 รอผู้อำนวยการ (ด่าน 4)";
+        } else if (item.status === 'Approved') {
+          badgeClass = "badge-approved";
+          statusText = "🟢 อนุมัติแล้ว";
+        } else if (item.status === 'Rejected') {
+          badgeClass = "badge-rejected";
+          statusText = "🔴 ปฏิเสธ";
+        }
+        
+        const fileLink = item.attachment_url 
+          ? `<a href="${item.attachment_url}" target="_blank" style="color: var(--primary-dark); font-weight: bold; text-decoration: none;">📄 เปิดเอกสาร</a>` 
+          : `<span style="color: var(--text-muted);">ไม่มีเอกสาร</span>`;
+          
+        html += `
+          <tr>
+            <td data-label="รหัสใบลา" style="font-weight: bold; color: var(--primary-dark);">${item.request_id}</td>
+            <td data-label="วันที่ยื่นคำขอ">${item.timestamp}</td>
+            <td data-label="ประเภทการลา">${item.leave_type}</td>
+            <td data-label="ช่วงวันที่ลา">${formatDateThai(item.start_date)} - ${formatDateThai(item.end_date)}</td>
+            <td data-label="จำนวนวัน" style="font-weight: bold;">${item.total_days} วัน</td>
+            <td data-label="สถานะ"><span class="badge ${badgeClass}">${statusText}</span></td>
+            <td data-label="เอกสารแนบ">${fileLink}</td>
+            <td data-label="หมายเหตุหัวหน้างาน" style="color: var(--danger); font-weight: 500;">${item.approver_comment || "-"}</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    // ฟังก์ชันจัดการฟอร์มลางาน: เปลี่ยนแปลงวันเริ่มต้น
+    function onStartDateChange() {
+      const start = document.getElementById("startDate").value;
+      const end = document.getElementById("endDate").value;
+      const periodSelect = document.getElementById("leavePeriod");
+      const period = periodSelect ? periodSelect.value : 'full';
+      
+      if (!end || new Date(end) < new Date(start)) {
+        document.getElementById("endDate").value = start;
+      }
+      
+      if (period !== 'full') {
+        document.getElementById("endDate").value = start;
+        document.getElementById("endDate").readOnly = true;
+      } else {
+        document.getElementById("endDate").readOnly = false;
+      }
+      calculateLeaveDays();
+    }
+
+    // คำนวณจำนวนวันลาสะสมเป็นค่าเริ่มต้น (ให้คุณครูสามารถกรอกตัวเลขแก้ไขเองได้)
+    function calculateLeaveDays() {
+      const startVal = document.getElementById("startDate").value;
+      const endVal = document.getElementById("endDate").value;
+      
+      const periodSelect = document.getElementById("leavePeriod");
+      const period = periodSelect ? periodSelect.value : 'full';
+      
+      if (period !== 'full') {
+        document.getElementById("endDate").value = startVal;
+        document.getElementById("endDate").readOnly = true;
+      } else {
+        document.getElementById("endDate").readOnly = false;
+      }
+      
+      if (!startVal || !endVal) {
+        document.getElementById("totalDays").value = "";
+        return;
+      }
+      
+      if (period !== 'full') {
+        document.getElementById("totalDays").value = 0.5;
+        return;
+      }
+      
+      const start = new Date(startVal);
+      const end = new Date(endVal);
+      
+      if (end < start) {
+        document.getElementById("totalDays").value = "";
+        return;
+      }
+      
+      const diffTime = Math.abs(end - start);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+      document.getElementById("totalDays").value = diffDays;
+    }
+
+    // ควบคุมไฟล์แนบ
+    function handleFileSelect(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        if (file.size > 10 * 1024 * 1024) {
+          alert("ไฟล์มีขนาดใหญ่เกิน 10MB กรุณาเลือกไฟล์ใหม่");
+          input.value = "";
+          appState.selectedFile = null;
+          document.getElementById("fileUploadText").innerHTML = `📁 ลากไฟล์มาวางที่นี่ หรือ คลิกเพื่อเลือกไฟล์<br><span style="font-size: 11px; color: var(--text-muted);">(รองรับ PDF, PNG, JPG ขนาดไม่เกิน 10MB)</span>`;
+          return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          appState.selectedFile = {
+            base64: e.target.result,
+            name: file.name,
+            type: file.type
+          };
+          document.getElementById("fileUploadText").innerHTML = `🟢 เลือกไฟล์แล้ว: <strong>${file.name}</strong> (${(file.size/1024/1024).toFixed(2)} MB)`;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // ยื่นขออนุมัติลางาน
+    function handleLeaveSubmit(e) {
+      e.preventDefault();
+      
+      const total = Number(document.getElementById("totalDays").value);
+      if (!total || total <= 0) {
+        alert("กรุณาระบุจำนวนวันลาให้ถูกต้อง");
+        return;
+      }
+      
+      // เนื่องจากไม่มีโควต้าตายตัว อนุญาตให้ยื่นขออนุมัติลาตามขั้นตอนอนุมัติได้โดยตรง
+      
+      const submitBtn = e.target.querySelector("button[type='submit']");
+      const origText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerText = "กำลังประมวลผลคำขอ...";
+      
+      const requestData = {
+        leave_type: document.getElementById("leaveType").value,
+        start_date: document.getElementById("startDate").value,
+        end_date: document.getElementById("endDate").value,
+        total_days: total,
+        reason: document.getElementById("leaveReason").value,
+        contact_address: document.getElementById("contactAddress").value,
+        file_base64: appState.selectedFile ? appState.selectedFile.base64 : "",
+        file_name: appState.selectedFile ? appState.selectedFile.name : "",
+        file_type: appState.selectedFile ? appState.selectedFile.type : ""
+      };
+      
+      google.script.run
+        .withSuccessHandler(function(res) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = origText;
+          if (res.success) {
+            showToast("ส่งใบลาออนไลน์สำเร็จแล้ว เลขที่อ้างอิง: " + res.requestId);
+            document.getElementById("leaveRequestForm").reset();
+            appState.selectedFile = null;
+            document.getElementById("fileUploadText").innerHTML = `📁 ลากไฟล์มาวางที่นี่ หรือ คลิกเพื่อเลือกไฟล์<br><span style="font-size: 11px; color: var(--text-muted);">(รองรับ PDF, PNG, JPG ขนาดไม่เกิน 10MB)</span>`;
+            loadUserDashboardData();
+          }
+        })
+        .withFailureHandler(function(err) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = origText;
+          alert("เกิดความผิดพลาดในการส่งข้อมูล: " + err.toString());
+        })
+        .submitLeaveRequest(appState.user.email, requestData);
+    }
+
+    // -------------------------------------------------------------
+    // ฟังก์ชันของแท็บ: การอนุมัติการลา (APPROVER SECTION)
+    // -------------------------------------------------------------
+    
+    function loadApproverData() {
+      document.getElementById("pendingApprovalsList").innerHTML = `
+        <p style="text-align: center; color: var(--text-muted); padding: 20px;">กำลังโหลดรายการใบลาจากระบบ...</p>
+      `;
+      document.getElementById("deptLeaveCalendar").innerHTML = `
+        <p style="text-align: center; color: var(--text-muted); padding: 10px;">กำลังโหลดปฏิทิน...</p>
+      `;
+      
+      google.script.run
+        .withSuccessHandler(function(data) {
+          appState.approverData = data;
+          renderPendingApprovals(data.pending);
+          loadCalendarData();
+        })
+        .withFailureHandler(function(err) {
+          document.getElementById("pendingApprovalsList").innerHTML = `
+            <p style="text-align: center; color: var(--danger); padding: 20px;">โหลดข้อมูลผิดพลาด: ${err.message || err}</p>
+          `;
+          alert("เกิดข้อผิดพลาดในการโหลดรายการอนุมัติ: " + err.toString());
+        })
+        .getApproverData(appState.user.email);
+    }
+
+    // เรนเดอร์การ์ดใบลาที่ค้างรออนุมัติ
+    function renderPendingApprovals(pendingList) {
+      const container = document.getElementById("pendingApprovalsList");
+      if (pendingList.length === 0) {
+        container.innerHTML = `
+          <p style="text-align: center; color: var(--success); font-weight: bold; padding: 30px;">🎉 ไม่มีรายการคำขอลาที่รออนุมัติในขณะนี้</p>
+        `;
+        return;
+      }
+      
+      let html = "";
+      pendingList.forEach(item => {
+        const fileHtml = item.attachment_url 
+          ? `<p>📂 <strong>เอกสารประกอบ:</strong> <a href="${item.attachment_url}" target="_blank" style="color: var(--primary-dark); font-weight: bold;">[คลิกเปิดเอกสารแนบ]</a></p>`
+          : "";
+          
+                const deptName = item.department || "";
+                const deptPrefix = (deptName.indexOf('แผนก') === 0 || deptName.indexOf('งาน') === 0 || deptName.indexOf('คณะ') === 0) ? "" : "แผนกวิชา";
+                html += `
+          <div class="approval-card" id="card_${item.request_id}">
+            <div class="approval-card-header">
+              <div class="applicant-info">
+                <h4>${item.employee_name}</h4>
+                <p>${deptPrefix}${deptName} | ตำแหน่ง: ${item.position} (${item.emp_type})</p>
+              </div>
+              <span class="badge badge-pending" style="height: fit-content;">${item.request_id}</span>
+            </div>
+            <div class="approval-card-body">
+              <p>📌 <strong>ประเภทการลา:</strong> <span style="font-weight: bold; color: var(--primary-dark);">${item.leave_type}</span></p>
+              <p>📅 <strong>วันที่ลา:</strong> ${formatDateThai(item.start_date)} ถึง ${formatDateThai(item.end_date)} (<strong>${item.total_days} วัน</strong>)</p>
+              <p>✍️ <strong>เหตุผลการลา:</strong> ${item.reason}</p>
+              <p>📍 <strong>สถานที่ติดต่อ:</strong> ${item.contact_address}</p>
+              ${fileHtml}
+            </div>
+            <div class="approval-actions">
+              <button class="btn btn-success btn-sm" onclick="approveRequest('${item.request_id}')">🟢 อนุมัติ</button>
+              <button class="btn btn-danger btn-sm" onclick="openRejectModal('${item.request_id}')">🔴 ปฏิเสธ</button>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // โหลดประวัติวันลาอนุมัติเพื่อจัดลงปฏิทิน
+    function loadCalendarData() {
+      google.script.run
+        .withSuccessHandler(function(events) {
+          const container = document.getElementById("deptLeaveCalendar");
+          if (events.length === 0) {
+            container.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 10px;">ไม่มีครู/บุคลากรลางานในช่วงเวลานี้</p>`;
+            return;
+          }
+          
+          let html = "";
+          events.forEach(ev => {
+            let typeClass = "sick";
+            if (ev.leave_type === 'ลากิจส่วนตัว') typeClass = "personal";
+            if (ev.leave_type === 'ลาพักผ่อน') typeClass = "vacation";
+            
+            html += `
+              <div class="calendar-event ${typeClass}">
+                <div class="event-date">${formatDateThai(ev.start_date)} - ${formatDateThai(ev.end_date)}</div>
+                <div class="event-details">
+                  <strong>${ev.employee_name}</strong> (${ev.department}) ลา: <span style="color: var(--primary-dark); font-weight: bold;">${ev.leave_type}</span> (${ev.total_days} วัน) เหตุผล: ${ev.reason}
+                </div>
+              </div>
+            `;
+          });
+          container.innerHTML = html;
+        })
+        .withFailureHandler(function(err) {
+          document.getElementById("deptLeaveCalendar").innerHTML = `<p style="text-align: center; color: var(--danger); padding: 10px;">เกิดข้อผิดพลาดในการโหลดปฏิทิน: ${err.message || err}</p>`;
+        })
+        .getCalendarData(appState.user.email);
+    }
+
+    // ดำเนินการอนุมัติใบลา
+    function approveRequest(requestId) {
+      if (!confirm("คุณต้องการอนุมัติใบลาเลขที่ " + requestId + " ใช่หรือไม่?")) return;
+      
+      const card = document.getElementById("card_" + requestId);
+      if (card) card.style.opacity = "0.5";
+      
+      google.script.run
+        .withSuccessHandler(function(res) {
+          if (res.success) {
+            showToast("อนุมัติใบลา " + requestId + " สำเร็จ");
+            loadApproverData();
+          }
+        })
+        .withFailureHandler(function(err) {
+          if (card) card.style.opacity = "1";
+          alert("เกิดข้อผิดพลาด: " + err.toString());
+        })
+        .approveOrRejectRequest(appState.user.email, requestId, 'Approved', 'อนุมัติผ่านระบบเว็บแอป');
+    }
+
+    // ดำเนินการเปิด Modal แจ้งเหตุผลการปฏิเสธ
+    function openRejectModal(requestId) {
+      document.getElementById("rejectRequestId").value = requestId;
+      document.getElementById("rejectComment").value = "";
+      document.getElementById("rejectModal").style.display = "flex";
+    }
+
+    function closeRejectModal() {
+      document.getElementById("rejectModal").style.display = "none";
+    }
+
+    // บันทึกการปฏิเสธ
+    function submitReject() {
+      const requestId = document.getElementById("rejectRequestId").value;
+      const comment = document.getElementById("rejectComment").value.trim();
+      
+      if (!comment) {
+        alert("กรุณาระบุเหตุผลการปฏิเสธใบลาด้วย");
+        return;
+      }
+      
+      closeRejectModal();
+      const card = document.getElementById("card_" + requestId);
+      if (card) card.style.opacity = "0.5";
+      
+      google.script.run
+        .withSuccessHandler(function(res) {
+          if (res.success) {
+            showToast("ส่งผลการปฏิเสธใบลาสำเร็จ");
+            loadApproverData();
+          }
+        })
+        .withFailureHandler(function(err) {
+          if (card) card.style.opacity = "1";
+          alert("เกิดข้อผิดพลาด: " + err.toString());
+        })
+        .approveOrRejectRequest(appState.user.email, requestId, 'Rejected', comment);
+    }
+
+    // -------------------------------------------------------------
+    // ฟังก์ชันของแท็บ: ฝ่ายจัดการบุคลากร (ADMIN SECTION)
+    // -------------------------------------------------------------
+    
+    function loadAdminData() {
+      google.script.run
+        .withSuccessHandler(function(data) {
+          try {
+            appState.adminData = data;
+            renderAdminEmployees(data.employees);
+            renderAdminPolicies(data.policies);
+            renderAdminAllRequests(data.allRequests);
+            
+            // อัปเดตตารางสรุปรายงานปีงบประมาณ/รอบประเมินด้วย
+            populateFiscalYearDropdown();
+            renderFiscalYearSummaryTable();
+          } catch(renderErr) {
+            alert("เกิดข้อผิดพลาดในการนำเสนอข้อมูล: " + renderErr.toString() + "\n" + renderErr.stack);
+          }
+        })
+        .withFailureHandler(function(err) {
+          alert("เกิดข้อผิดพลาดในการโหลดข้อมูลแอดมิน: " + err.toString());
+        })
+        .getAdminData(appState.user.email);
+    }
+
+    // แสดงรายการพนักงาน
+    function renderAdminEmployees(empList) {
+      const tbody = document.getElementById("adminEmployeesTable");
+      if (empList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center;">ไม่มีพนักงานในระบบ</td></tr>`;
+        return;
+      }
+      
+      let html = "";
+      empList.forEach(emp => {
+        html += `
+          <tr>
+            <td>${emp.emp_id}</td>
+            <td style="font-weight: bold;">${emp.prefix}${emp.first_name} ${emp.last_name}</td>
+            <td>${emp.email}</td>
+            <td>${emp.department}</td>
+            <td>${emp.position}</td>
+            <td>${emp.emp_type}</td>
+            <td>${emp.line_user_id || "-"}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" style="padding: 2px 6px;" onclick="editEmployee('${emp.email}')">✏️ แก้ไข</button>
+              <button class="btn btn-danger btn-sm" style="padding: 2px 6px;" onclick="deleteEmployee('${emp.email}')">🗑️ ลบ</button>
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    // ทำการแก้ไขพนักงาน (เติมข้อมูลฟอร์มด้านบน)
+    function editEmployee(email) {
+      const emp = appState.adminData.employees.find(e => e.email === email);
+      if (emp) {
+        document.getElementById("empEmail").value = emp.email;
+        document.getElementById("empEmail").readOnly = true; // ล็อกอีเมลไม่ให้แก้คีย์หลัก
+        document.getElementById("empId").value = emp.emp_id;
+        document.getElementById("empPrefix").value = emp.prefix;
+        document.getElementById("empFirstName").value = emp.first_name;
+        document.getElementById("empLastName").value = emp.last_name;
+        document.getElementById("empDepartment").value = emp.department;
+        document.getElementById("empPosition").value = emp.position;
+        document.getElementById("empType").value = emp.emp_type;
+        document.getElementById("empPassword").value = ""; // ไม่แสดงรหัสผ่านเก่า
+        document.getElementById("empLineId").value = emp.line_user_id || "";
+        
+        document.getElementById("employeeForm").scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // เคลียร์ฟอร์ม
+    function resetEmployeeForm() {
+      document.getElementById("employeeForm").reset();
+      document.getElementById("empEmail").readOnly = false;
+    }
+
+    // ลบพนักงาน
+    function deleteEmployee(email) {
+      if (email.toLowerCase() === appState.user.email.toLowerCase()) {
+        alert("คุณไม่สามารถลบตัวตนของคุณเองที่กำลังล็อกอินอยู่ได้");
+        return;
+      }
+      
+      if (!confirm("คุณแน่ใจว่าต้องการลบข้อมูลบุคลากรอีเมล " + email + " หรือไม่? การลบนี้จะรวมถึงลบสิทธิ์วันลาสะสมประจำปีด้วย")) return;
+      
+      google.script.run
+        .withSuccessHandler(function(res) {
+          if (res.success) {
+            showToast("ลบพนักงานสำเร็จ");
+            loadAdminData();
+          }
+        })
+        .deleteEmployee(appState.user.email, email);
+    }
+
+    // บันทึก/เพิ่มพนักงานโดยแอดมิน
+    function handleEmployeeSubmit(e) {
+      e.preventDefault();
+      
+      const empData = {
+        email: document.getElementById("empEmail").value.trim(),
+        emp_id: document.getElementById("empId").value.trim(),
+        prefix: document.getElementById("empPrefix").value,
+        first_name: document.getElementById("empFirstName").value.trim(),
+        last_name: document.getElementById("empLastName").value.trim(),
+        department: document.getElementById("empDepartment").value,
+        position: document.getElementById("empPosition").value,
+        emp_type: document.getElementById("empType").value,
+        password: document.getElementById("empPassword").value.trim(),
+        line_user_id: document.getElementById("empLineId").value.trim()
+      };
+      
+      google.script.run
+        .withSuccessHandler(function(res) {
+          if (res.success) {
+            showToast("บันทึกพนักงานเรียบร้อยแล้ว");
+            resetEmployeeForm();
+            loadAdminData();
+          }
+        })
+        .updateEmployee(appState.user.email, empData);
+    }
+
+    // แสดงนโยบายลาเริ่มต้น
+    function renderAdminPolicies(policyList) {
+      const tbody = document.getElementById("adminPoliciesTable");
+      if (!tbody) return;
+      let html = "";
+      policyList.forEach(p => {
+        html += `
+          <tr>
+            <td style="font-weight: bold;">${p.emp_type}</td>
+            <td>${p.default_sick} วัน</td>
+            <td>${p.default_personal} วัน</td>
+            <td>${p.default_vacation} วัน</td>
+            <td>
+              <button class="btn btn-primary btn-sm" onclick="openPolicyModal('${p.emp_type}', ${p.default_sick}, ${p.default_personal}, ${p.default_vacation})">⚙️ แก้ไขโควตา</button>
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    // จัดการแก้ไขสิทธิ์นโยบาย
+    function openPolicyModal(empType, sick, personal, vacation) {
+      document.getElementById("policyEmpType").value = empType;
+      document.getElementById("policyLabelType").innerText = "ประเภทพนักงาน: " + empType;
+      document.getElementById("policySick").value = sick;
+      document.getElementById("policyPersonal").value = personal;
+      document.getElementById("policyVacation").value = vacation;
+      document.getElementById("policyModal").style.display = "flex";
+    }
+
+    function closePolicyModal() {
+      document.getElementById("policyModal").style.display = "none";
+    }
+
+    function handlePolicySave(e) {
+      e.preventDefault();
+      
+      const policyData = {
+        emp_type: document.getElementById("policyEmpType").value,
+        default_sick: document.getElementById("policySick").value,
+        default_personal: document.getElementById("policyPersonal").value,
+        default_vacation: document.getElementById("policyVacation").value
+      };
+      
+      closePolicyModal();
+      
+      google.script.run
+        .withSuccessHandler(function(res) {
+          if (res.success) {
+            showToast("อัปเดตสิทธิ์นโยบายสำเร็จ");
+            loadAdminData();
+          }
+        })
+        .updateLeavePolicy(appState.user.email, policyData);
+    }
+
+    // หน้าแอดมิน: ดำเนินการรีเซ็ตปีงบประมาณ
+    function runFiscalReset() {
+      const year = document.getElementById("newFiscalYear").value;
+      if (!year) {
+        alert("กรุณาระบุปีงบประมาณ");
+        return;
+      }
+      
+      if (!confirm("⚠️ คำเตือน! คุณต้องการดำเนินการรีเซ็ต/สร้างสิทธิ์วันลาตั้งต้นประจำปี " + year + " ให้กับพนักงานทุกคนในระบบตามประเภทพนักงานใช่หรือไม่?")) return;
+      
+      google.script.run
+        .withSuccessHandler(function(res) {
+          if (res.success) {
+            showToast("ดำเนินการรีเซ็ต/เพิ่มวันลาสำหรับปีงบประมาณ " + year + " เรียบร้อยแล้ว");
+            loadAdminData();
+          }
+        })
+        .generateFiscalYearBalances(appState.user.email, year);
+    }
+
+    // -------------------------------------------------------------
+    // ฟังก์ชันเสริมเกี่ยวกับปีงบประมาณและรอบการประเมิน (สรุปรายรอบ)
+    // -------------------------------------------------------------
+
+    // ดึงปีงบประมาณที่มีอยู่จาก Leaves Balances มาใส่ดรอปดาวน์ฟิลเตอร์
+    function populateFiscalYearDropdown() {
+      const select = document.getElementById("summaryFiscalYear");
+      if (!select) return;
+      
+      // เก็บค่าที่เลือกไว้ปัจจุบัน (ถ้ามี)
+      const currentVal = select.value;
+      select.innerHTML = "";
+      
+      // ดึงปีงบประมาณทั้งหมดจากข้อมูลที่โหลดมา
+      const years = new Set();
+      const balances = (appState.adminData && appState.adminData.balances) || [];
+      balances.forEach(b => {
+        if (b.fiscal_year) years.add(b.fiscal_year.toString().trim());
+      });
+      
+      // ถ้าไม่มีข้อมูล ให้ตั้งปีปัจจุบันเป็นปีงบประมาณพื้นฐาน
+      if (years.size === 0) {
+        years.add("2569");
+        years.add("2570");
+      }
+      
+      // จัดเรียงปีงบประมาณจากใหม่ไปเก่า (DESC)
+      const sortedYears = Array.from(years).sort((a, b) => parseInt(b) - parseInt(a));
+      
+      sortedYears.forEach(y => {
+        const opt = document.createElement("option");
+        opt.value = y;
+        opt.textContent = y;
+        select.appendChild(opt);
+      });
+      
+      // คืนค่าปีที่เลือกเดิม หรือเลือกปีล่าสุด
+      if (currentVal && sortedYears.includes(currentVal)) {
+        select.value = currentVal;
+      } else if (sortedYears.includes("2570")) {
+        select.value = "2570";
+      } else {
+        select.value = sortedYears[0];
+      }
+    }
+
+    // ประมวลผลและเรนเดอร์ตารางสรุปวันลาบุคลากรแยกตามรอบประเมิน
+    function renderFiscalYearSummaryTable() {
+      const fiscalYearSelect = document.getElementById("summaryFiscalYear");
+      const roundSelect = document.getElementById("summaryRound");
+      const tbody = document.getElementById("summaryTableBody");
+      
+      if (!fiscalYearSelect || !roundSelect || !tbody) return;
+      
+      const fYear = fiscalYearSelect.value;
+      const round = roundSelect.value;
+      
+      if (!fYear) {
+        tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; color: var(--text-muted);">กรุณาเลือกปีงบประมาณ</td></tr>`;
+        return;
+      }
+      
+      const employees = (appState.adminData && appState.adminData.employees) || [];
+      const allRequests = (appState.adminData && appState.adminData.allRequests) || [];
+      
+      // คำนวณช่วงวันที่ของรอบการประเมินตามปฏิทินหลวง (ปีงบประมาณไทยเริ่ม 1 ต.ค.)
+      const gregYear = parseInt(fYear) - 543;
+      let startRange, endRange;
+      let roundText = "";
+      
+      if (round === "1") {
+        // รอบที่ 1: 1 ต.ค. (ปีก่อนหน้า) ถึง 31 มี.ค. (ปีงบประมาณ)
+        startRange = new Date(gregYear - 1, 9, 1, 0, 0, 0); // 1 ต.ค.
+        endRange = new Date(gregYear, 2, 31, 23, 59, 59); // 31 มี.ค.
+        roundText = "รอบที่ 1 (1 ต.ค. - 31 มี.ค.)";
+      } else {
+        // รอบที่ 2: 1 เม.ย. (ปีงบประมาณ) ถึง 30 ก.ย. (ปีงบประมาณ)
+        startRange = new Date(gregYear, 3, 1, 0, 0, 0); // 1 เม.ย.
+        endRange = new Date(gregYear, 8, 30, 23, 59, 59); // 30 ก.ย.
+        roundText = "รอบที่ 2 (1 เม.ย. - 30 ก.ย.)";
+      }
+      
+      // อัปเดตคำอธิบายหัวข้อ
+      document.getElementById("summarySubtitle").innerText = `ตั้งแต่วันที่ ${roundText} ปีงบประมาณ ${fYear}`;
+      
+      // เริ่มต้นแมปข้อมูลสะสมของบุคลากรแต่ละคน
+      const summaryMap = {};
+      employees.forEach(emp => {
+        summaryMap[emp.email.toLowerCase().trim()] = {
+          emp: emp,
+          sick_days: 0,
+          personal_days: 0,
+          maternity_days: 0,
+          paternity_days: 0,
+          ordination_days: 0,
+          study_days: 0,
+          other_days: 0,
+          total_days: 0,
+          total_times: 0
+        };
+      });
+      
+      // ประมวลผลและคัดกรองคำขอลา
+      allRequests.forEach(req => {
+        // นับเฉพาะกรณีที่ได้รับอนุมัติเสร็จสิ้นแล้ว (Approved)
+        const statusLower = (req.status || "").toLowerCase();
+        const isApproved = statusLower === 'approved' || statusLower.indexOf('ยินยอม') > -1 || statusLower.indexOf('อนุมัติ') > -1;
+        if (!isApproved) return;
+        
+        if (!req.start_date) return;
+        const reqStart = new Date(req.start_date);
+        
+        // ตรวจสอบว่าช่วงวันลาเริ่มอยู่ในรอบประเมินนั้นๆ หรือไม่
+        if (reqStart < startRange || reqStart > endRange) return;
+        
+        const emailKey = req.email.toLowerCase().trim();
+        const summary = summaryMap[emailKey];
+        if (!summary) return; // หากไม่พบรายชื่อในฝ่าย Employees
+        
+        const days = parseFloat(req.total_days) || 0;
+        const type = req.leave_type || "";
+        
+        summary.total_days += days;
+        summary.total_times += 1;
+        
+        // จำแนกประเภทวันลาตามหัวตาราง 7 ช่องหลัก
+        if (type.indexOf("ป่วย") > -1) {
+          summary.sick_days += days;
+        } else if (type.indexOf("กิจ") > -1) {
+          summary.personal_days += days;
+        } else if (type.indexOf("คลอด") > -1) {
+          summary.maternity_days += days;
+        } else if (type.indexOf("ช่วยภริยา") > -1 || type.indexOf("ช่วยคลอด") > -1) {
+          summary.paternity_days += days;
+        } else if (type.indexOf("บวช") > -1 || type.indexOf("อุปสมบท") > -1 || type.indexOf("ฮัจญ์") > -1) {
+          summary.ordination_days += days;
+        } else if (type.indexOf("ศึกษา") > -1 || type.indexOf("อบรม") > -1) {
+          summary.study_days += days;
+        } else {
+          summary.other_days += days;
+        }
+      });
+      
+      // เรนเดอร์ลงตาราง
+      const summaryList = Object.values(summaryMap);
+      if (summaryList.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="12" style="text-align: center; color: var(--text-muted); padding: 40px 10px;">
+              ยังไม่มีรายชื่อบุคลากรลงทะเบียนในระบบ
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      let html = "";
+      let index = 1;
+      
+      summaryList.forEach(item => {
+        const fullName = `${item.emp.prefix}${item.emp.first_name} ${item.emp.last_name}`;
+        const dept = item.emp.department || "-";
+        
+        // ตัวช่วยแสดงข้อมูล หากเป็น 0 ให้ปล่อยว่างหรือขีด เพื่อความเรียบร้อยของรายงาน
+        const fmtVal = val => val > 0 ? val : "";
+        
+        html += `
+          <tr>
+            <td style="text-align: center;">${index++}</td>
+            <td style="font-weight: 500;">${fullName}</td>
+            <td>${dept}</td>
+            <td style="text-align: center; color: #d35400; font-weight: 600;">${fmtVal(item.sick_days)}</td>
+            <td style="text-align: center; color: #2980b9; font-weight: 600;">${fmtVal(item.personal_days)}</td>
+            <td style="text-align: center;">${fmtVal(item.maternity_days)}</td>
+            <td style="text-align: center;">${fmtVal(item.paternity_days)}</td>
+            <td style="text-align: center;">${fmtVal(item.ordination_days)}</td>
+            <td style="text-align: center;">${fmtVal(item.study_days)}</td>
+            <td style="text-align: center; color: #7f8c8d;">${fmtVal(item.other_days)}</td>
+            <td style="text-align: center; font-weight: bold; background-color: rgba(245,124,0,0.03); color: var(--primary-dark);">${item.total_days}</td>
+            <td style="text-align: center; font-weight: bold; color: var(--grey-dark);">${item.total_times}</td>
+          </tr>
+        `;
+      });
+      
+      tbody.innerHTML = html;
+    }
+
+    // ส่งออกรายงานสถิติตารางสรุปเป็น Excel (CSV Format)
+    function exportSummaryToExcel() {
+      const fiscalYearSelect = document.getElementById("summaryFiscalYear");
+      const roundSelect = document.getElementById("summaryRound");
+      if (!fiscalYearSelect || !roundSelect) return;
+      
+      const fYear = fiscalYearSelect.value;
+      const round = roundSelect.value;
+      const roundText = round === "1" ? "รอบที่ 1 (1 ต.ค. - 31 มี.ค.)" : "รอบที่ 2 (1 เม.ย. - 30 ก.ย.)";
+      
+      if (!appState.adminData) return;
+      
+      const employees = appState.adminData.employees || [];
+      const allRequests = appState.adminData.allRequests || [];
+      
+      const gregYear = parseInt(fYear) - 543;
+      let startRange, endRange;
+      if (round === "1") {
+        startRange = new Date(gregYear - 1, 9, 1, 0, 0, 0);
+        endRange = new Date(gregYear, 2, 31, 23, 59, 59);
+      } else {
+        startRange = new Date(gregYear, 3, 1, 0, 0, 0);
+        endRange = new Date(gregYear, 8, 30, 23, 59, 59);
+      }
+      
+      let csv = `สรุปวันลาของข้าราชการ พนักงานราชการ และบุคลากรทางการศึกษา\n`;
+      csv += `ตั้งแต่วันที่ ${roundText} ปีงบประมาณ ${fYear}\n\n`;
+      csv += `ที่,ชื่อ-นามสกุล,สังกัดแผนกวิชา,ลาป่วย,ลากิจส่วนตัว,ลาคลอดบุตร,ช่วยภริยาคลอด,อุปสมบท/ฮัจญ์,ศึกษา/อบรม,อื่นๆ,รวมวัน,รวมครั้ง\n`;
+      
+      // คำนวณยอดลาสะสมใหม่เพื่อความแม่นยำ
+      let idx = 1;
+      employees.forEach(emp => {
+        const fullName = `${emp.prefix}${emp.first_name} ${emp.last_name}`;
+        const dept = emp.department || "-";
+        
+        let sick = 0, personal = 0, maternity = 0, paternity = 0, ordination = 0, study = 0, other = 0, totalDays = 0, totalTimes = 0;
+        
+        allRequests.forEach(req => {
+          const statusLower = (req.status || "").toLowerCase();
+          const isApproved = statusLower === 'approved' || statusLower.indexOf('ยินยอม') > -1 || statusLower.indexOf('อนุมัติ') > -1;
+          if (!isApproved) return;
+          if (req.email.toLowerCase().trim() !== emp.email.toLowerCase().trim()) return;
+          if (!req.start_date) return;
+          
+          const reqStart = new Date(req.start_date);
+          if (reqStart < startRange || reqStart > endRange) return;
+          
+          const days = parseFloat(req.total_days) || 0;
+          const type = req.leave_type || "";
+          
+          totalDays += days;
+          totalTimes += 1;
+          
+          if (type.indexOf("ป่วย") > -1) sick += days;
+          else if (type.indexOf("กิจ") > -1) personal += days;
+          else if (type.indexOf("คลอด") > -1) maternity += days;
+          else if (type.indexOf("ช่วยภริยา") > -1 || type.indexOf("ช่วยคลอด") > -1) paternity += days;
+          else if (type.indexOf("บวช") > -1 || type.indexOf("อุปสมบท") > -1 || type.indexOf("ฮัจญ์") > -1) ordination += days;
+          else if (type.indexOf("ศึกษา") > -1 || type.indexOf("อบรม") > -1) study += days;
+          else other += days;
+        });
+        
+        csv += `${idx++},"${fullName}","${dept}",${sick || ""},${personal || ""},${maternity || ""},${paternity || ""},${ordination || ""},${study || ""},${other || ""},${totalDays},${totalTimes}\n`;
+      });
+      
+      downloadCSVFile(csv, `สรุปสถิติวันลา_${fYear}_รอบประเมินที่_${round}.csv`);
+    }
+
+    // แสดงคำขอลาของทุกคนสำหรับแอดมิน
+    function renderAdminAllRequests(reqList) {
+      const tbody = document.getElementById("adminAllRequestsTable");
+      if (reqList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center;">ไม่มีประวัติการขออนุมัติลาในวิทยาลัย</td></tr>`;
+        return;
+      }
+      
+      let html = "";
+      reqList.forEach(item => {
+        let badgeClass = "badge-pending";
+        let statusText = "🟡 รอพิจารณา";
+        if (item.status === 'Pending Dept') {
+          statusText = "🟡 รอหัวหน้าแผนก (ด่าน 1)";
+        } else if (item.status === 'Pending HR') {
+          statusText = "🟡 รอฝ่ายบุคลากร (ด่าน 2)";
+        } else if (item.status === 'Pending Deputy') {
+          statusText = "🟡 รอรองผู้อำนวยการ (ด่าน 3)";
+        } else if (item.status === 'Pending Director') {
+          statusText = "🟡 รอผู้อำนวยการ (ด่าน 4)";
+        } else if (item.status === 'Approved') {
+          badgeClass = "badge-approved";
+          statusText = "🟢 อนุมัติแล้ว";
+        } else if (item.status === 'Rejected') {
+          badgeClass = "badge-rejected";
+          statusText = "🔴 ปฏิเสธ";
+        }
+        
+        html += `
+          <tr>
+            <td style="font-weight: bold;">${item.request_id}</td>
+            <td>${item.email}</td>
+            <td>${item.leave_type}</td>
+            <td>${item.start_date}</td>
+            <td>${item.end_date}</td>
+            <td style="font-weight: bold;">${item.total_days} วัน</td>
+            <td><span class="badge ${badgeClass}">${statusText}</span></td>
+            <td>${item.approver_comment || "-"}</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    // -------------------------------------------------------------
+    // ฟังก์ชันส่งออกรายงาน (EXPORT DATA TO CSV)
+    // -------------------------------------------------------------
+    
+    // ส่งออกรายการขอลาทั้งหมด
+    function exportLeaveRequestsToCSV() {
+      if (!appState.adminData || !appState.adminData.allRequests) return;
+      const data = appState.adminData.allRequests;
+      
+      let csv = "รหัสใบลา,อีเมลผู้ขอลา,ประเภทการลา,วันที่เริ่มต้น,วันที่สิ้นสุด,จำนวนวันลา,สถานะอนุมัติ,หมายเหตุเพิ่มเติม\n";
+      data.forEach(item => {
+        csv += `"${item.request_id}","${item.email}","${item.leave_type}","${item.start_date}","${item.end_date}",${item.total_days},"${item.status}","${item.approver_comment || ""}"\n`;
+      });
+      
+      downloadCSVFile(csv, "ประวัติการลารวม_วิทยาลัยเทคนิคประจวบ.csv");
+    }
+
+    // ส่งออกสรุปสิทธิ์คงเหลือของทุกคน
+    function exportLeaveBalancesToCSV() {
+      if (!appState.adminData || !appState.adminData.balances) return;
+      const data = appState.adminData.balances;
+      
+      let csv = "ปีงบประมาณ,อีเมลบุคลากร,คำนำหน้า,ชื่อจริง,นามสกุล,แผนกวิชา,ตำแหน่ง,ลาป่วยโควตา,ลาป่วยใช้ไป,ลากิจโควตา,ลากิจใช้ไป,ลาพักผ่อนโควตา,ลาพักผ่อนใช้ไป\n";
+      data.forEach(item => {
+        csv += `"${item.fiscal_year}","${item.email}","${item.prefix || ""}","${item.first_name || ""}","${item.last_name || ""}","${item.department || ""}","${item.position || ""}",${item.sick_total},${item.sick_used},${item.personal_total},${item.personal_used},${item.vacation_total},${item.vacation_used}\n`;
+      });
+      
+      downloadCSVFile(csv, "รายงานสิทธิ์และยอดการลาคงเหลือของบุคลากร.csv");
+    }
+
+    // ดาวน์โหลดไฟล์ CSV ลงในเครื่อง
+    function downloadCSVFile(csvContent, fileName) {
+      const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", fileName);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // --- ฟังก์ชันเสริมแปลงวันที่ไทยสำหรับหน้าจอ ---
+    function formatDateThai(dateStr) {
+      if (!dateStr) return "";
+      try {
+        let dateObj;
+        if (dateStr instanceof Date) {
+          dateObj = dateStr;
+        } else {
+          var cleanStr = dateStr.toString().split('T')[0].trim();
+          var parts = cleanStr.split('-');
+          if (parts.length === 3) {
+            dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+          } else {
+            parts = cleanStr.split('/');
+            if (parts.length === 3) {
+              dateObj = new Date(parts[2], parts[1] - 1, parts[0]);
+            } else {
+              dateObj = new Date(dateStr);
+            }
+          }
+        }
+        
+        if (isNaN(dateObj.getTime())) {
+          return dateStr;
+        }
+        
+        const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+        const day = dateObj.getDate();
+        const month = months[dateObj.getMonth()];
+        const year = dateObj.getFullYear() + 543;
+        return day + " " + month + " " + year;
+      } catch (e) {
+        return dateStr;
+      }
+    }
+  </script>
+</body>
+</html>
